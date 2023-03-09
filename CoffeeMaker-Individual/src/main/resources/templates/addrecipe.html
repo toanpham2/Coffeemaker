@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Add Recipe</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		position: relative;
+		padding: 10px;
+	}
+	
+	.submitbutton{
+		margin-left: 10px;
+		margin-right: 10px;
+		font-size: 15px;
+		
+	}
+	
+	#inputlabel{
+		font-size: 25px;
+	}
+	
+	.inputbox{
+		width: 300px;
+	}
+	
+	
+	
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('addRecipeController', function($scope, $http, $q) {
+			
+			//TODO: error handling
+			//TODO: set up recipe object to call api and save to database
+			//Post API call, sends the recipe to the database and logs success or failure in console
+			$scope.postRecipe = function() {
+				$scope.success = false;
+				$scope.failure = false;
+				
+				console.log($scope.recipeObject.ingredients)
+
+				
+				$http.post("/api/v1/recipes", $scope.recipeObject).then(
+				function(response){
+					console.log("Recipe successfully added.");
+				}, function(rejection) {
+					$scope.failure = true;
+					$scope.success = false;
+					console.error("Error when adding recipe");
+					$scope.errorMessage = rejection.data.message;
+					console.log(rejection.data.message);
+				});
+				$scope.success = !($scope.failue);
+			}
+			
+			//Reset function, changes state of page to when its first clicked
+			$scope.reset = function(){
+				//recipe object to send to API
+				$scope.recipeObject = {
+						name: "",
+						price: "",
+						ingredients: new Array()
+				}
+				if (undefined != $scope.addRecipeForm) {
+					$scope.addRecipeForm.$setPristine(); // reset Form
+				}
+				
+				//get the list of ingredients in the inventory
+				$http.get("/api/v1/inventory").then(function(response) {
+					$scope.ingredients = response.data.ingredients;
+					
+					//create checkboxSpec list, used to hold ingredient info and checkbox status
+					$scope.checkboxSpec = new Array();
+					for(let i = 0; i < $scope.ingredients.length; i++){
+						//for each ingredient, put a new object in the list containing:
+						//ingredient name, if its in the recipe, and the amount associated with it
+						$scope.checkboxSpec.push({
+							"name": $scope.ingredients[i].name, 
+							"inRecipe":false, 
+							"checked":false,
+							"amount": 0
+						});
+					}
+					
+
+				}, function(rejection) {
+					console.error("Error getting ingredients");
+				})
+			}
+			
+			//function for when add selected ingredients is pressed
+			$scope.addIngredients = function(){
+				//go through each checkboxSpec object
+				 for(let i = 0; i < $scope.checkboxSpec.length; i++){
+					 //if its not in the recipe and is checked, it needs to be added
+					if(!$scope.checkboxSpec[i].inRecipe && $scope.checkboxSpec[i].checked){
+						//set it to be in the recipe. The checkboxes disable attribute are bound to this variable so they will disable themselves when this is changed
+						$scope.checkboxSpec[i].inRecipe = true;
+					}
+				}
+			}
+			
+			//function for when remove button is pressed
+			$scope.removeIngredient = function(name){
+				for(let i = 0; i < $scope.checkboxSpec.length; i++){
+					//find ingredient in list and change update fields accordingly
+					if($scope.checkboxSpec[i].name == name){
+						$scope.checkboxSpec[i].inRecipe = false;
+						$scope.checkboxSpec[i].checked = false;
+						break;
+					}
+				}
+			}
+			
+			//funciton for when create recipe is pressed
+			$scope.createRecipe = function(){
+				//currently just prints out all fields
+				//TODO: create approiate objects and make API call
+
+				for(let i = 0; i < $scope.checkboxSpec.length; i++){
+					if($scope.checkboxSpec[i].inRecipe){
+						$scope.recipeObject.ingredients.push({
+							"name": $scope.checkboxSpec[i].name,
+							"amount": $scope.checkboxSpec[i].amount
+						})
+					}
+				}
+				//Add the recipe to the database whenever a new recipe is added
+				$scope.postRecipe();
+				$scope.reset();
+
+			}
+			
+			$scope.reset();
+			
+		});
+		/*]]>*/
+	</script>
+		
+		
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="addRecipeController">
+		
+		<!-- bind name and price fields to the recipe object fields -->
+		<h1 style="text-align: center; font-size: 50px;">Add Recipe</h1>
+		<div class="line1" id="centered">
+			<label for="ingredientname" id="inputlabel">Recipe Name: </label>
+			<input type="text" id="ingredientname" class="inputbox" ng-model="recipeObject.name">
+		</div>
+		
+		<div class="line2" id="centered">
+			<label for="recipeprice" id="inputlabel">Recipe Price: </label>
+			<input type="text" id="recipeprice" class="inputbox" ng-model="recipeObject.price">
+		</div>
+		
+		<!-- 
+			loop through the checkboxSpec and create a label, input box, and remove button for each ingredient
+			the numeric input is bound to the checkbox spec object for that ingredient (iteravily named as info)
+			The important part here is ng-show on the divs, which show/hide the whole line as the inRecipe field is changed
+		 -->
+		<div id="ingredientfields">
+			<div ng-repeat="info in checkboxSpec track by $index">
+				<div id="centered" ng-show=info.inRecipe>
+					<label for="units" id="inputlabel">{{info.name}} Units: </label>
+					<input type="number" id="units" class="inputbox" ng-model="info.amount">
+					<button type="button" ng-click="removeIngredient(info.name)">remove</button>
+				</div>
+			</div>
+		</div>
+		
+		<div id="centered">
+			<button type="button" ng-click="createRecipe()">Create Recipe</button>
+		</div>
+
+		<!-- 
+			create a checkbox item for each ingredient in the inventoy
+			setting the model to info.checked changed the checked field to true or false based on if the box is checked
+			setting the ng-disabled field to the inRecipe field will disable its true
+			
+		 -->
+		<div id="centered">
+			<div ng-repeat="info in checkboxSpec track by $index">
+				<input type="checkbox" ng-model="info.checked" ng-disabled="info.inRecipe">
+					<tt> {{info.name}} </tt>
+				</input>
+				
+			</div>
+		</div>
+		
+		<div id="centered">
+			<button type="button" class="submitbutton" ng-click="addIngredients()">Add Selected Ingredients</button>
+		</div>
+		
+		<div ng-show="success">Recipe Successfully Added</div>
+		<div ng-show="failure">{{errorMessage}}</div>
+		
+	</div>
+
+
+
+</body>

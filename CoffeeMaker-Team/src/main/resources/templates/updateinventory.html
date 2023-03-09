@@ -1,0 +1,140 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title>Update Inventory</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+
+	}
+
+	#centered{
+		display: flex;
+		justify-content: center;
+	}
+
+	.line{
+		padding-bottom: 20px;
+	}
+
+	.submitbtn{
+		margin-top: 20px;
+	}
+
+
+
+
+</style>
+
+</head>
+
+<body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('updateInventoryController', function($scope, $http, $q) {
+			
+			$scope.refresh = function(){
+				//get the list of ingredients in the inventory
+				$http.get("/api/v1/inventory").then(function(response) {
+					$scope.ingredients = response.data.ingredients;
+					//create checkboxSpec list, used to hold ingredient info and checkbox status
+					$scope.ingredientData = new Array();
+					for(let i = 0; i < $scope.ingredients.length; i++){
+						//for each ingredient, put a new object in the list
+						$scope.ingredientData.push({
+							"name": $scope.ingredients[i].name, 
+							"current":$scope.ingredients[i].amount,
+							"amountToAdd":0
+						});
+						
+					}
+					console.log($scope.ingredientData)
+					
+
+				}, function(rejection) {
+					console.error("Error getting ingredients");
+				})
+			}
+
+			
+			$scope.updateInventory = function(){
+				
+				$scope.success = false;
+				$scope.failure = false;
+				
+				$scope.ingredientsList = []
+				for(let i = 0; i < $scope.ingredientData.length; i++){
+					$scope.ingredientsList.push({"name": $scope.ingredientData[i].name, "amount": $scope.ingredientData[i].amountToAdd})
+				}
+				$http.put("/api/v1/inventory", $scope.ingredientsList).then(
+						function(response){
+							console.log("ingredient updated")
+						}, function(rejection){
+							$scope.failure = true;
+							$scope.success = false;
+							console.log("failed to update ingredient")
+						}
+					).finally(function(){
+						if($scope.success){
+							for(let i = 0; i < $scope.ingredientData.length; i++){
+								$scope.ingredientData[i].current += $scope.ingredientData[i].amountToAdd
+								$scope.ingredientData[i].amountToAdd = 0	
+							}
+						}
+					})
+				$scope.success = !($scope.failue);
+
+			}
+			
+			$scope.refresh()
+		})
+		/*]]>*/
+	</script>
+
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="updateInventoryController">
+		<h1 style="text-align: center; font-size: 50px;">Update Inventory</h1>
+
+		<div id="centered">
+			<h3>Current Values</h3>
+		</div>
+		<div>
+			<div ng-repeat="ingredient in ingredientData track by $index">
+				<div>
+					<h4 id="centered">{{ingredient.name}}: {{ingredient.current}} </h4>
+				</div>
+			</div>
+		</div>
+		
+		<div id="centered">
+			<h3>Input how much of each ingredient to add</h3>
+		</div>
+	
+		<div id="ingredientfields">
+			<div ng-repeat="ingredient in ingredientData track by $index">
+				<div id="centered">
+					<label for="units" id="inputlabel">{{ingredient.name}}: </label>
+					<input type="number" id="units" class="inputbox" ng-model="ingredient.amountToAdd">
+				</div>
+			</div>
+		</div>
+	
+		<div id="centered">
+			<button type="button" class="submitbtn" ng-click="updateInventory()">Update Inventory</button>
+		</div>
+		
+		<div ng-show="success" id="centered">Inventory Successfully Updated</div>
+		<div ng-show="failure" id="centered">Error: can't have a negative amount</div>
+		
+	</div>
+
+
+
+</body>
