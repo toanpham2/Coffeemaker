@@ -28,6 +28,15 @@
 		font-size: 30px; 	
 	}
 	
+	th, td {
+		padding: 17px 70px;
+		border: 1px solid;
+	}
+	
+	table {
+  		border-collapse: collapse;
+	}
+	
 		
 </style>
 
@@ -41,7 +50,9 @@
 		var app = angular.module('myApp', []);
 		app.controller('homeController', function($scope, $http, $q) {
 			
-		
+			$http.get("/api/v1/recipes").then(function(response) {
+				$scope.recipes = response.data;
+			});
 			
 		})
 		/*]]>*/
@@ -51,13 +62,29 @@
 
 		<h1 style="text-align: center; font-size: 30px;">Current Order</h1>
 		
+		<table id="centered">
+		
+			<tr>
+				<th>Drink</th>
+				<th>Price</th>
+				<th>Status</th>
+			</tr>
+			
+			<tr>
+				<td>Coffee</td>
+				<td>$3</td>
+				<td>In progress</td>
+			</tr>
+		
+		</table>
+		
 		<div id="centered">
 			<button class="btn" type="button" >Refresh</button>
 		</div>
 		
 		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
 		
-		<div>
+		<div id="centered">
 			<ul>
 				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
 						<input type="radio" ng-model="$parent.name" name="name"
