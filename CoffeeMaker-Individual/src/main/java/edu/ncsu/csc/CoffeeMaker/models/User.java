@@ -2,6 +2,7 @@ package edu.ncsu.csc.CoffeeMaker.models;
 
 import java.io.Serializable;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -13,24 +14,25 @@ import javax.persistence.Id;
  * @author tgpham
  * @author bcchavez
  */
+@Entity
 public class User extends DomainObject {
 
     /** id for the database */
     @Id
     @GeneratedValue
-    public Long          id;
+    public Long                 id;
 
     /** username for user */
-    private String       username;
+    private String              username;
 
     /** password for user */
-    private String       password;
+    private String              password;
 
     /** whether a user is staff or not */
-    private boolean      isStaff;
+    private boolean             isStaff;
 
     /** code for if a user is a staff member */
-    private final String STAFF_CODE = "OnePiece";
+    private static final String STAFF_CODE = "OnePiece";
 
     /**
      * empty constructor

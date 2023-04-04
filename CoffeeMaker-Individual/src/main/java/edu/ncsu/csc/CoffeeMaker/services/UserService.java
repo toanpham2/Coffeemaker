@@ -1,7 +1,10 @@
 package edu.ncsu.csc.CoffeeMaker.services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.CoffeeMaker.models.User;
 import edu.ncsu.csc.CoffeeMaker.repositories.UserRepository;
@@ -13,6 +16,8 @@ import edu.ncsu.csc.CoffeeMaker.repositories.UserRepository;
  * @author stnguye3
  *
  */
+@Component
+@Transactional
 public class UserService extends Service<User, Long> {
 
     /**
@@ -39,8 +44,8 @@ public class UserService extends Service<User, Long> {
      *            Name of the user to find
      * @return found user, null if none
      */
-    public User findUser ( final String username ) {
-        return userRepository.findUser( username );
+    public User findByUsername ( final String username ) {
+        return userRepository.findByUsername( username );
     }
 
 }
