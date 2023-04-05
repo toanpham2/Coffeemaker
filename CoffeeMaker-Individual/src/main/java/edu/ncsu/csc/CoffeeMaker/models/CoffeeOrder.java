@@ -25,10 +25,10 @@ public class CoffeeOrder extends DomainObject {
     public String  name;
 
     /** status if order is fulfilled */
-    public boolean isFulfilled = false;
+    public boolean isFulfilled;
 
     /** status if order is picked up */
-    public boolean isPickedUp  = false;
+    public boolean isPickedUp;
 
     /** empty constructor */
     public CoffeeOrder () {
@@ -37,8 +37,10 @@ public class CoffeeOrder extends DomainObject {
 
     public CoffeeOrder ( final Recipe recipe, final User user ) {
         super();
-        this.recipe = recipe;
-        this.name = user.getUsername();
+        setRecipe( recipe );
+        setName( user.getUsername() );
+        setFulfilled( false );
+        setPickedUp( false );
     }
 
     @Override
