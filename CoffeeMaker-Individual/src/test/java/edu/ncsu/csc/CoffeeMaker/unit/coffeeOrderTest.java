@@ -68,7 +68,7 @@ public class coffeeOrderTest {
     public void testCoffeeOrderValid () {
         assertEquals( 0, service.findAll().size(), "There should be no coffeeOrder in the CoffeeMaker" );
 
-        final User user1 = new User( "username123", "pass123", "n/a" );
+        final User user1 = new User( "username123", "pass123", "n/a", false );
 
         final Recipe r1 = new Recipe();
         r1.setName( "Black Coffee" );

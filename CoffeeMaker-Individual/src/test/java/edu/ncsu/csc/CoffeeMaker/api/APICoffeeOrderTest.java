@@ -110,8 +110,8 @@ public class APICoffeeOrderTest {
         r1.addIngredient( Chocolate );
         r1.setPrice( 1 );
 
-        final User user1 = new User( "username123", "pass123", "n/a" );
-        final User user2 = new User( "username222", "pass222", "n/a" );
+        final User user1 = new User( "username123", "pass123", "n/a", false );
+        final User user2 = new User( "username222", "pass222", "n/a", false );
 
         final CoffeeOrder order1 = new CoffeeOrder( r1, user1 );
         final CoffeeOrder order2 = new CoffeeOrder( r1, user2 );
