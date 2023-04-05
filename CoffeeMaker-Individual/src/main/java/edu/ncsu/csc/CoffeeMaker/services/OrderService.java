@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import edu.ncsu.csc.CoffeeMaker.models.Order;
+import edu.ncsu.csc.CoffeeMaker.models.CoffeeOrder;
 import edu.ncsu.csc.CoffeeMaker.repositories.OrderRepository;
 
 @Component
 @Transactional
-public class OrderService extends Service<Order, Long> {
+public class OrderService extends Service<CoffeeOrder, Long> {
     /**
      * IngredientRepository, to be autowired in by Spring and provide CRUD
      * operations on Ingredient model.
@@ -20,7 +20,7 @@ public class OrderService extends Service<Order, Long> {
     private OrderRepository orderRepository;
 
     @Override
-    protected JpaRepository<Order, Long> getRepository () {
+    protected JpaRepository<CoffeeOrder, Long> getRepository () {
         return orderRepository;
     }
 
@@ -31,7 +31,7 @@ public class OrderService extends Service<Order, Long> {
      *            the name to add
      * @return the order object
      */
-    public Order findByName ( final String name ) {
+    public CoffeeOrder findByName ( final String name ) {
         return orderRepository.findByName( name );
     }
 }

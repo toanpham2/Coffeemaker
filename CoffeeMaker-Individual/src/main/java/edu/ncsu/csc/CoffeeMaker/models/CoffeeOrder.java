@@ -3,10 +3,12 @@ package edu.ncsu.csc.CoffeeMaker.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
-public class Order extends DomainObject {
+public class CoffeeOrder extends DomainObject {
 
     /** id for the database */
     @Id
@@ -14,7 +16,9 @@ public class Order extends DomainObject {
     public Long    id;
 
     /** recipe used by the order */
-    @OneToOne
+    @NotNull
+    @ManyToOne
+    @JoinColumn ( name = "recipe_id" )
     public Recipe  recipe;
 
     /** name of the order */
@@ -27,11 +31,11 @@ public class Order extends DomainObject {
     public boolean isPickedUp  = false;
 
     /** empty constructor */
-    public Order () {
+    public CoffeeOrder () {
 
     }
 
-    public Order ( final Recipe recipe, final User user ) {
+    public CoffeeOrder ( final Recipe recipe, final User user ) {
         super();
         this.recipe = recipe;
         this.name = user.getUsername();

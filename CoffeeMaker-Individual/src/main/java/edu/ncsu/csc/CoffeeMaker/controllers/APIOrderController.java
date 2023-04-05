@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.ncsu.csc.CoffeeMaker.models.CoffeeOrder;
 import edu.ncsu.csc.CoffeeMaker.models.Inventory;
-import edu.ncsu.csc.CoffeeMaker.models.Order;
 import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import edu.ncsu.csc.CoffeeMaker.services.OrderService;
 
@@ -40,7 +40,7 @@ public class APIOrderController extends APIController {
     @GetMapping ( BASE_PATH + "/orders/{name}" )
     public ResponseEntity getOrder ( @PathVariable final String name ) {
 
-        final Order order = service.findByName( name );
+        final CoffeeOrder order = service.findByName( name );
 
         if ( null == order ) {
             return new ResponseEntity( HttpStatus.NOT_FOUND );
@@ -55,7 +55,7 @@ public class APIOrderController extends APIController {
      * @return JSON representation of all orders
      */
     @GetMapping ( BASE_PATH + "/orders" )
-    public List<Order> getOrders () {
+    public List<CoffeeOrder> getOrders () {
         return service.findAll();
     }
 
@@ -69,7 +69,7 @@ public class APIOrderController extends APIController {
     @DeleteMapping ( BASE_PATH + "/orders/{id}" )
     public ResponseEntity deleteOrder ( @PathVariable final Long id ) {
         System.out.println( "Deleting id " + id.toString() );
-        final Order order = service.findById( id );
+        final CoffeeOrder order = service.findById( id );
         if ( null == order ) {
             return new ResponseEntity( errorResponse( "No order found for name " + order.getName() ),
                     HttpStatus.NOT_FOUND );
@@ -87,7 +87,7 @@ public class APIOrderController extends APIController {
      * @return Response Entity
      */
     @PostMapping ( BASE_PATH + "/orders" )
-    public ResponseEntity createOrder ( @RequestBody final Order order ) {
+    public ResponseEntity createOrder ( @RequestBody final CoffeeOrder order ) {
         if ( null != service.findByName( order.getName() ) ) {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " already exists" ),
                     HttpStatus.CONFLICT );
@@ -104,8 +104,8 @@ public class APIOrderController extends APIController {
      * @return Response Entity
      */
     @PutMapping ( BASE_PATH + "/ordersFulfilled" )
-    public ResponseEntity updateOrdersFulfilled ( @RequestBody final Order order ) {
-        final Order o = service.findByName( order.getName() );
+    public ResponseEntity updateOrdersFulfilled ( @RequestBody final CoffeeOrder order ) {
+        final CoffeeOrder o = service.findByName( order.getName() );
         final Inventory inventory = inventoryService.getInventory();
         if ( null == o ) {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
@@ -132,8 +132,8 @@ public class APIOrderController extends APIController {
      * @return Response Entity
      */
     @PutMapping ( BASE_PATH + "/ordersPickedUp" )
-    public ResponseEntity updateOrdersPickedUp ( @RequestBody final Order order ) {
-        final Order o = service.findByName( order.getName() );
+    public ResponseEntity updateOrdersPickedUp ( @RequestBody final CoffeeOrder order ) {
+        final CoffeeOrder o = service.findByName( order.getName() );
         if ( null == o ) {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
                     HttpStatus.CONFLICT );
