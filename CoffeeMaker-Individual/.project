@@ -16,7 +16,9 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
+login_js
 					<value>&lt;project&gt;/.externalToolBuilders/net.sf.eclipsecs.core.CheckstyleBuilder.launch</value>
+ development
 				</dictionary>
 			</arguments>
 		</buildCommand>

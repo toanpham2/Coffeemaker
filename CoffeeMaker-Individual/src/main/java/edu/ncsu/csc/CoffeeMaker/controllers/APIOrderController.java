@@ -109,7 +109,7 @@ public class APIOrderController extends APIController {
         final Inventory inventory = inventoryService.getInventory();
         if ( null == o ) {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
-                    HttpStatus.CONFLICT );
+                    HttpStatus.NOT_FOUND );
         }
         for ( int i = 0; i < o.getRecipe().getAllIngredients().size(); i++ ) {
             if ( o.getRecipe().getAllIngredients().get( i ).getAmount() < inventory
@@ -136,12 +136,13 @@ public class APIOrderController extends APIController {
         final CoffeeOrder o = service.findByName( order.getName() );
         if ( null == o ) {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
-                    HttpStatus.CONFLICT );
+                    HttpStatus.NOT_FOUND );
         }
 
         o.setPickedUp( true );
         service.save( o );
-        return new ResponseEntity( successResponse( order.getName() + " was successfully updated to fulfilled" ),
+        return new ResponseEntity( successResponse( order.getName() + " was successfully updated to picked up" ),
                 HttpStatus.OK );
     }
+
 }
