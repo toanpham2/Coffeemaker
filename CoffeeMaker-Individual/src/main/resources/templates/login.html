@@ -41,8 +41,25 @@
 		var app = angular.module('myApp', []);
 		app.controller('loginController', function($scope, $http, $q) {
 			
-		
+			$scope.reset = function(){
+				$scope.enteredUsername = "";
+				$scope.enteredPassword = "";
+			}
 			
+			$scope.login = function() {
+				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
+					if(response.data.isStaff){
+						window.location.href = "/staffhome.html"
+					}
+					else{
+						window.location.href = "/customerhome.html"
+					}
+				}, function(rejection){
+					$scope.errorMessage = "login failed"
+				})
+			}
+			
+			$scope.reset()
 		})
 		/*]]>*/
 	</script>
@@ -53,21 +70,24 @@
 		
 		<div id="centered">
 			<label for="username" id="inputLabel">Username: </label>
-			<input type="text" id="username">
+			<input type="text" id="username" ng-model="enteredUsername">
 		</div>
 		
 		<div id="centered">
 			<label for="password" id="inputLabel">Password: </label>
-			<input type="text" id="password">
+			<input type="text" id="password" ng-model="enteredPassword">
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Login</button>
+			<button class="btn" type="button" ng-click="login()">Login</button>
 		</div>
 		
+		{{errorMessage}}
+		
 		<div id="centered">
-			<button class="btn" type="button" >Create Account</button>
+			<a href="createaccount.html">Create Account</a>
 		</div>
+		
 		
 
 	</div>

@@ -67,6 +67,10 @@ public class APIUserController extends APIController {
                     HttpStatus.CONFLICT );
         }
 
+        if ( user.getIsStaff() && !user.getSubmittedStaffCode().equals( user.getStaffCode() ) ) {
+            return new ResponseEntity( errorResponse( "Incorrect Staff Code" ), HttpStatus.CONFLICT );
+        }
+
         // no existing account with username yet, so add new user
         service.save( user );
         return new ResponseEntity(
