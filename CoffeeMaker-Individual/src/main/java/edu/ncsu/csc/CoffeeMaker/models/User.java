@@ -54,13 +54,13 @@ public class User extends DomainObject {
      * @param staffCode
      *            code to indicate if a user is staff or not
      */
-    public User ( final String username, final String password, final String submittedStaffCode, final boolean isStaff,
-            final String staffCode ) {
+    public User ( final String username, final String password, final String submittedStaffCode,
+            final boolean isStaff ) {
         this.username = username;
         this.password = password;
         this.isStaff = isStaff;
         this.submittedStaffCode = submittedStaffCode;
-        if ( isStaff && !staffCode.equals( STAFF_CODE ) ) {
+        if ( isStaff && !submittedStaffCode.equals( STAFF_CODE ) ) {
             throw new IllegalArgumentException( "Staff code is incorrect" );
         }
     }
