@@ -35,10 +35,10 @@ public class CoffeeOrder extends DomainObject {
 
     }
 
-    public CoffeeOrder ( final Recipe recipe, final User user ) {
+    public CoffeeOrder ( final Recipe recipe, final String username ) {
         super();
         setRecipe( recipe );
-        setName( user.getUsername() );
+        setName( username );
         setFulfilled( false );
         setPickedUp( false );
     }

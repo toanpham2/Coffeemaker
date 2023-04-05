@@ -49,11 +49,17 @@
 			
 			
 			$scope.login = function() {
+				localStorage.setItem('username', $scope.enteredUsername);
+				localStorage.setItem('password', $scope.enteredPassword);
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
 					if(response.data.isStaff){
+						localStorage.setItem('staffcode', 'OnePiece');
+						localStorage.setItem('isstaff', 'true');
 						window.location.href = "/staffhome.html"
 					}
 					else{
+						localStorage.setItem('staffcode', $scope.enteredUsername);
+						localStorage.setItem('isstaff', $scope.enteredPassword);
 						window.location.href = "/customerhome.html"
 					}
 				}, function(rejection){

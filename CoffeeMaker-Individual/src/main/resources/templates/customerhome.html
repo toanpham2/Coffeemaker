@@ -54,8 +54,58 @@
 				$scope.recipes = response.data;
 			});
 			
+			$scope.currentOrderName = "Coffee";
+			$scope.currentOrderPrice = "3";
+			$scope.currentOrderStatus = "In Progress";
+			
+			$scope.currentUser = {
+				username: localStorage.getItem('username'),
+				password: localStorage.getItem('password')
+			}
+			
+			$scope.reset = function(){
+				$scope.enteredUsername = "";
+				$scope.enteredPassword = "";
+				$scope.errorMessage = "";
+			}
+			
+			$scope.refresh = function() {
+				$http.get("api/v1/orderInProgress").then(function(response) {
+					
+				}, function(rejection) {
+					
+				})
+			}
+			
+			$scope.placeOrder = function(param) {
+				for (let k = 0; k <  $scope.recipes.length; k++){
+					if($scope.recipes[k].name == param){
+						$scope.orderRecipe = $scope.recipes[k];
+					}
+				}
+				console.log($scope.orderRecipe.name);
+				console.log($scope.currentUser);
+				$scope.orderObject = {
+						recipe: $scope.orderRecipe,
+						user: $scope.currentUser,
+				}
+				$http.post("api/v1/orders/" + $scope.orderObject).then(function(response) {
+					console.log(response);			
+				}, function(rejection) {
+					console.log(rejection);
+				})
+			}
+			
+			$scope.logout = function() {
+				window.location.href = "/login.html"
+				console.error("There was an error");
+				console.log("Logout successful.")
+			}
+			
+			
 		})
-		/*]]>*/
+			
+			
 	</script>
 	
 	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="homeController">
@@ -71,9 +121,15 @@
 			</tr>
 			
 			<tr>
-				<td>Coffee</td>
-				<td>$3</td>
-				<td>In progress</td>
+				<td>
+					<label> {{currentOrderName}} </label>
+				</td>
+				<td>
+					<label> {{currentOrderPrice}} </label>
+				</td>
+				<td>
+					<label> {{currentOrderStatus}} </label>
+				</td>
 			</tr>
 		
 		</table>
@@ -106,13 +162,13 @@
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Order Coffee</button>
+			<button class="btn" type="button" ng-click = "placeOrder(name)" >Order Coffee</button>
 		</div>
 		
 		
 		
 		<div id="centered">
-			<button class="btn" type="button" >Logout</button>
+			<a href="login"><button>Logout</button></a>
 		</div>
 		
 

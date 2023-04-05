@@ -82,7 +82,7 @@ public class coffeeOrderTest {
         r1.addIngredient( Chocolate );
         r1.setPrice( 1 );
 
-        final CoffeeOrder order1 = new CoffeeOrder( r1, user1 );
+        final CoffeeOrder order1 = new CoffeeOrder( r1, user1.getUsername() );
 
         UserService.save( user1 );
         recipeService.save( r1 );
