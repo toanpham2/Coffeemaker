@@ -79,4 +79,21 @@ public class UserTest {
 
     }
 
+    /**
+     * Test User to string
+     */
+    @Test
+    @Transactional
+    public void testUserToString () {
+        final User staff = new User( "staffname", "staffpass!", "OnePiece" );
+        final User customer = new User( "CustomerName", "1234!#", "n/a" );
+
+        final String staffString = staff.toString();
+        final String customerString = customer.toString();
+
+        assertEquals( "User [id=null, username=staffname, password=staffpass!, isStaff=true]", staffString );
+        assertEquals( "User [id=null, username=CustomerName, password=1234!#, isStaff=false]", customerString );
+
+    }
+
 }

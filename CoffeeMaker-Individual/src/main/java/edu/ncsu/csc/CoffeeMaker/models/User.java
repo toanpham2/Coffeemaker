@@ -124,7 +124,7 @@ public class User extends DomainObject {
      */
     @Override
     public String toString () {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", isStaff=" + isStaff + "]\n";
+        return "User [id=" + id + ", username=" + username + ", password=" + password + ", isStaff=" + isStaff + "]";
     }
 
 }
