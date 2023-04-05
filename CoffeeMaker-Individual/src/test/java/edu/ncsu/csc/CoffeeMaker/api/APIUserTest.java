@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Assertions;
@@ -64,22 +66,79 @@ public class APIUserTest {
      * Test posting new user- staff
      *
      * @throws Exception
+     *             if there are problems creating user
      */
     @Test
     @Transactional
-    public void testAddUser () throws Exception {
-
+    public void testAddStaff () throws Exception {
         final User user2 = new User( "staffuser4", "staffpass123", "OnePiece" );
-        service.save( user2 );
 
+        // add new user (register)
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( user2 ) ) );
 
-        Assertions.assertEquals( 1, service.count() );
-
+        // get user info for staffuser4 (login)
         final String userInfo = mvc.perform( get( "/api/v1/users/staffuser4" ) ).andDo( print() )
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
         Assertions.assertTrue( userInfo.contains( "staffuser4" ) );
+
+        Assertions.assertEquals( 1, service.count() ); // user is saved in
+                                                       // service
+    }
+
+    /**
+     * Test GET for user not in system
+     *
+     * @throws Exception
+     *             if there are issues in getting user
+     * @throws UnsupportedEncodingException
+     *             if unsupported character encoding scheme is used
+     */
+    @Test
+    @Transactional
+    public void testGetUserNotFound () throws UnsupportedEncodingException, Exception {
+        Assertions.assertEquals( 0, service.count() ); // no users saved
+
+        final String userInfo = mvc.perform( get( "/api/v1/users/FakeUser11" ) ).andDo( print() )
+                .andExpect( status().is4xxClientError() ).andReturn().getResponse().getContentAsString();
+
+        // should not have any info about this unsaved user
+        Assertions.assertFalse( userInfo.contains( "FakeUser11" ) );
+    }
+
+    /**
+     * Test posting and getting new User - customer
+     *
+     * @throws Exception
+     *             if there are issues in posting user
+     */
+    @Test
+    @Transactional
+    public void testAddCustomer () throws Exception {
+        // first customer
+        final User customer1 = new User( "syd123", "pass000", "onepiece" );
+
+        // save this customer
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1 ) ) );
+
+        Assertions.assertEquals( 1, service.count() ); // there is one user in
+                                                       // the system
+
+        final String userInfo = mvc.perform( get( "/api/v1/users/syd123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        // should have correct password info
+        Assertions.assertTrue( userInfo.contains( "pass000" ) );
+
+        // create another customer with the same username
+        final User customer2 = new User( "syd123", "word444", "N/A" );
+
+        // save this customer, should get status 409 conflict
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer2 ) ) ).andExpect( status().is4xxClientError() );
+        // customer2 duplicate should not be saved
+        Assertions.assertEquals( 1, service.count() );
+
     }
 
 }
