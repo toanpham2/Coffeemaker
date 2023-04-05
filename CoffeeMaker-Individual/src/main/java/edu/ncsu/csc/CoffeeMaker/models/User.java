@@ -31,6 +31,9 @@ public class User extends DomainObject {
     /** whether a user is staff or not */
     private boolean             isStaff;
 
+    /** users enterd code for the staff */
+    private String              submittedStaffCode;
+
     /** code for if a user is a staff member */
     private static final String STAFF_CODE = "OnePiece";
 
@@ -51,14 +54,14 @@ public class User extends DomainObject {
      * @param staffCode
      *            code to indicate if a user is staff or not
      */
-    public User ( final String username, final String password, final String staffCode ) {
+    public User ( final String username, final String password, final String submittedStaffCode,
+            final boolean isStaff ) {
         this.username = username;
         this.password = password;
-        if ( staffCode.equals( STAFF_CODE ) ) {
-            isStaff = true;
-        }
-        else {
-            isStaff = false;
+        this.isStaff = isStaff;
+        this.submittedStaffCode = submittedStaffCode;
+        if ( isStaff && !submittedStaffCode.equals( STAFF_CODE ) ) {
+            throw new IllegalArgumentException( "Staff code is incorrect" );
         }
     }
 
@@ -78,6 +81,34 @@ public class User extends DomainObject {
      */
     public String getPassword () {
         return password;
+    }
+
+    /**
+     * gets the staff code
+     *
+     * @return the staff code
+     */
+    public String getStaffCode () {
+        return STAFF_CODE;
+    }
+
+    /**
+     * gets the submitted staff code
+     *
+     * @return the staff code submitted
+     */
+    public String getSubmittedStaffCode () {
+        return submittedStaffCode;
+    }
+
+    /**
+     * sets the submitted staff code
+     *
+     * @param submittedStaffCode
+     *            the code to set
+     */
+    public void setSubmittedStaffCode ( final String submittedStaffCode ) {
+        this.submittedStaffCode = submittedStaffCode;
     }
 
     /**

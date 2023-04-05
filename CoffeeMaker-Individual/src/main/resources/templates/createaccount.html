@@ -41,7 +41,36 @@
 		var app = angular.module('myApp', []);
 		app.controller('createaccountController', function($scope, $http, $q) {
 			
-		
+
+			
+			$scope.reset = function(){
+				$scope.enteredUsername = "";
+				$scope.enteredPassword = "";
+				$scope.enteredStaffCode = "";
+			}
+			
+			
+			$scope.createAccount = function(isStaff){
+				$scope.user = {
+						"username": $scope.enteredUsername,
+						"password": $scope.enteredPassword,
+						"submittedStaffCode": $scope.enteredStaffCode,
+						"isStaff": isStaff
+					}
+					
+					$http.post("api/v1/users", $scope.user).then(function(response) {
+						$scope.response = response
+						$scope.reset()
+					}, function(rejection){
+						$scope.response = rejection
+						$scope.enteredStaffCode = "";
+					})
+			}
+			
+				
+
+			
+			$scope.reset()
 			
 		})
 		/*]]>*/
@@ -53,26 +82,34 @@
 		
 		<div id="centered">
 			<label for="username" id="inputLabel">Username: </label>
-			<input type="text" id="username">
+			<input type="text" id="username" ng-model="enteredUsername">
 		</div>
 		
 		<div id="centered">
 			<label for="password" id="inputLabel">Password: </label>
-			<input type="text" id="password">
+			<input type="password" id="password" ng-model="enteredPassword">
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Create Customer Account</button>
+			<button class="btn" type="button" ng-click="createAccount(false)" >Create Customer Account</button>
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Create Staff Account</button>
+			<label for="staffCode" id="inputLabel">If you are making a staff account, enter the code: </label>
+			<input type="text" id="staffCode" ng-model="enteredStaffCode">
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Return to Login</button>
+			<button class="btn" type="button"  ng-click="createAccount(true)" >Create Staff Account</button>
 		</div>
 		
+		<div id="centered">
+			<a href="login"><button>Return to Login</button></a>
+		</div>
+		
+		<div id="centered">
+			<p>	{{response.data.message}}  </p>
+		</div>
 
 	</div>
 

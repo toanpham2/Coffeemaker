@@ -71,7 +71,7 @@ public class APIUserTest {
     @Test
     @Transactional
     public void testAddStaff () throws Exception {
-        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece" );
+        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece", true );
 
         // add new user (register)
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
@@ -116,7 +116,7 @@ public class APIUserTest {
     @Transactional
     public void testAddCustomer () throws Exception {
         // first customer
-        final User customer1 = new User( "syd123", "pass000", "onepiece" );
+        final User customer1 = new User( "syd123", "pass000", "onepiece", false );
 
         // save this customer
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
@@ -131,7 +131,7 @@ public class APIUserTest {
         Assertions.assertTrue( userInfo.contains( "pass000" ) );
 
         // create another customer with the same username
-        final User customer2 = new User( "syd123", "word444", "N/A" );
+        final User customer2 = new User( "syd123", "word444", "N/A", false );
 
         // save this customer, should get status 409 conflict
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )

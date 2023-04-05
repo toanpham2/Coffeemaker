@@ -22,7 +22,7 @@ public class MappingController {
      *            underlying UI model
      * @return contents of the page
      */
-    @GetMapping ( { "/index", "/" } )
+    @GetMapping ( { "/index", "/index.html" } )
     public String index ( final Model model ) {
         return "index";
     }
@@ -118,6 +118,29 @@ public class MappingController {
     @GetMapping ( { "/customerhome", "/customerhome.html" } )
     public String customerHomeForm ( final Model model ) {
         return "customerhome";
+    }
+
+    /**
+     * On a GET request to /makecoffee, the MakeCoffeeController will return
+     * /src/main/resources/templates/makecoffee.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/login", "/" } )
+    public String loginForm ( final Model model ) {
+        return "login";
+    }
+
+    @GetMapping ( { "/createaccount", "/createaccount.html" } )
+    public String createAccountForm ( final Model model ) {
+        return "createaccount";
+    }
+
+    @GetMapping ( { "/staffhome", "/staffhome.html" } )
+    public String staffHomeForm ( final Model model ) {
+        return "staffhome";
     }
 
 }
