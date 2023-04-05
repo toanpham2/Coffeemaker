@@ -3,6 +3,7 @@ package edu.ncsu.csc.CoffeeMaker.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Order extends DomainObject {
@@ -13,6 +14,7 @@ public class Order extends DomainObject {
     public Long    id;
 
     /** recipe used by the order */
+    @OneToOne
     public Recipe  recipe;
 
     /** name of the order */
@@ -29,11 +31,10 @@ public class Order extends DomainObject {
 
     }
 
-    public Order ( final Recipe recipe, final user user ) {
+    public Order ( final Recipe recipe, final User user ) {
         super();
         this.recipe = recipe;
-        if
-        this.name = user.getName();
+        this.name = user.getUsername();
     }
 
     @Override
