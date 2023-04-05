@@ -1,0 +1,79 @@
+<head>
+
+<title>Create Account</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+		
+	}
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+	
+	.line{
+		padding-bottom: 20px;
+	}
+	
+	.btn{
+		width: 200px;
+	}
+	
+	#inputLabel {
+		font-size: 30px; 	
+	}
+	
+		
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('createaccountController', function($scope, $http, $q) {
+			
+		
+			
+		})
+		/*]]>*/
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="createaccountController">
+
+		<h1 style="text-align: center; font-size: 75px;">Coffee Maker</h1>
+		
+		<div id="centered">
+			<label for="username" id="inputLabel">Username: </label>
+			<input type="text" id="username">
+		</div>
+		
+		<div id="centered">
+			<label for="password" id="inputLabel">Password: </label>
+			<input type="text" id="password">
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" >Create Customer Account</button>
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" >Create Staff Account</button>
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" >Return to Login</button>
+		</div>
+		
+
+	</div>
+
+</body>

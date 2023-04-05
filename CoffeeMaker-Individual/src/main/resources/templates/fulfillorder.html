@@ -1,0 +1,85 @@
+<head>
+
+<title>Fulfill Order</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+		
+	}
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+	
+	.line{
+		padding-bottom: 20px;
+	}
+	
+	.btn{
+		width: 200px;
+	}
+	
+	#inputLabel {
+		font-size: 30px; 	
+	}
+	
+	th, td {
+		padding: 17px 70px;
+		border: 1px solid;
+	}
+	
+	table {
+  		border-collapse: collapse;
+	}
+	
+		
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('fulfillorderController', function($scope, $http, $q) {
+			
+		})
+		/*]]>*/
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="fulfillorderController">
+
+		<h1 style="text-align: center; font-size: 30px;">Current Orders</h1>
+		
+		<table id="centered">
+		
+			<tr>
+				<th>Customer</th>
+				<th>Order</th>
+				<th>Fulfill</th>
+			</tr>
+			
+			<tr>
+				<td>Joe</td>
+				<td>Coffee</td>
+				<td><button type="button">fulfill</button></td>
+			</tr>
+		
+		</table>
+		
+		<div id="centered">
+			<button class="btn" type="button" >Home</button>
+		</div>
+		
+		
+
+	</div>
+
+</body>

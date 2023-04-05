@@ -115,9 +115,9 @@ public class MappingController {
      *            underlying UI model
      * @return contents of the page
      */
-    @GetMapping ( { "/makecoffee", "/makecoffee.html" } )
-    public String makeCoffeeForm ( final Model model ) {
-        return "makecoffee";
+    @GetMapping ( { "/customerhome", "/customerhome.html" } )
+    public String customerHomeForm ( final Model model ) {
+        return "customerhome";
     }
 
 }
