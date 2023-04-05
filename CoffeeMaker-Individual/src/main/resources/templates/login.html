@@ -44,7 +44,9 @@
 			$scope.reset = function(){
 				$scope.enteredUsername = "";
 				$scope.enteredPassword = "";
+				$scope.errorMessage = "";
 			}
+			
 			
 			$scope.login = function() {
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
@@ -56,6 +58,7 @@
 					}
 				}, function(rejection){
 					$scope.errorMessage = "login failed"
+					$scope.enteredPassword = "";
 				})
 			}
 			
@@ -75,17 +78,19 @@
 		
 		<div id="centered">
 			<label for="password" id="inputLabel">Password: </label>
-			<input type="text" id="password" ng-model="enteredPassword">
+			<input type="password" id="password" ng-model="enteredPassword">
 		</div>
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click="login()">Login</button>
 		</div>
 		
-		{{errorMessage}}
+		<div id="centered">
+			<p>{{errorMessage}}</p>
+		</div>
 		
 		<div id="centered">
-			<a href="createaccount.html">Create Account</a>
+			<a href="createaccount.html"><button>Create Account</button></a>
 		</div>
 		
 		

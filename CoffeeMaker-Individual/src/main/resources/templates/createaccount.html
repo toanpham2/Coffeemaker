@@ -49,39 +49,26 @@
 				$scope.enteredStaffCode = "";
 			}
 			
-			$scope.customerCreate = function() {
-				
-				$scope.customer = {
-					"username": $scope.enteredUsername,
-					"password": $scope.enteredPassword,
-					"submittedStaffCode": "",
-					"isStaff": false
-				}
-				
-				//put new user in the database
-				$http.post("api/v1/users", $scope.customer).then(function(response) {
-					$scope.response = response
-				}, function(rejection){
-					$scope.response = rejection
-				})
-				
+			
+			$scope.createAccount = function(isStaff){
+				$scope.user = {
+						"username": $scope.enteredUsername,
+						"password": $scope.enteredPassword,
+						"submittedStaffCode": $scope.enteredStaffCode,
+						"isStaff": isStaff
+					}
+					
+					$http.post("api/v1/users", $scope.user).then(function(response) {
+						$scope.response = response
+						$scope.reset()
+					}, function(rejection){
+						$scope.response = rejection
+						$scope.enteredStaffCode = "";
+					})
 			}
 			
-			$scope.staffCreate = function (){
 				
-				$scope.staff = {
-					"username": $scope.enteredUsername,
-					"password": $scope.enteredPassword,
-					"submittedStaffCode": $scope.enteredStaffCode,
-					"isStaff": true
-				}
-				
-				$http.post("api/v1/users", $scope.staff).then(function(response) {
-					$scope.response = response
-				}, function(rejection){
-					$scope.response = rejection
-				})
-			}
+
 			
 			$scope.reset()
 			
@@ -100,11 +87,11 @@
 		
 		<div id="centered">
 			<label for="password" id="inputLabel">Password: </label>
-			<input type="text" id="password" ng-model="enteredPassword">
+			<input type="password" id="password" ng-model="enteredPassword">
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" ng-click="customerCreate()" >Create Customer Account</button>
+			<button class="btn" type="button" ng-click="createAccount(false)" >Create Customer Account</button>
 		</div>
 		
 		<div id="centered">
@@ -113,14 +100,16 @@
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button"  ng-click="staffCreate()" >Create Staff Account</button>
+			<button class="btn" type="button"  ng-click="createAccount(true)" >Create Staff Account</button>
 		</div>
 		
 		<div id="centered">
-			<a href="login">Return to Login</a>
+			<a href="login"><button>Return to Login</button></a>
 		</div>
 		
-		{{response.data.message}}
+		<div id="centered">
+			<p>	{{response.data.message}}  </p>
+		</div>
 
 	</div>
 
