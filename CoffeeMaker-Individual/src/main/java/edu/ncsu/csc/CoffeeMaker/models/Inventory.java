@@ -144,8 +144,6 @@ public class Inventory extends DomainObject {
      * @return true if successful, false if not
      */
     public boolean updateIngredients ( final Ingredient ingredient ) {
-        if ( ingredient.getAmount() < 0 ) {
-        }
 
         for ( int i = 0; i < ingredientsInv.size(); i++ ) {
             if ( ingredient.getType().equals( ingredientsInv.get( i ).getType() ) ) {

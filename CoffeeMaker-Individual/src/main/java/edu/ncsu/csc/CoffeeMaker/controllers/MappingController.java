@@ -157,6 +157,13 @@ public class MappingController {
         return "staffhome";
     }
 
+    /**
+     * maps to the page for staff to fulfill an order
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
     @GetMapping ( { "/fulfillorder", "/fulfillorder.html" } )
     public String fulfillOrder ( final Model model ) {
         return "fulfillorder";
