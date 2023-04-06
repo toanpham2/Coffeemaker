@@ -50,32 +50,35 @@
 		var app = angular.module('myApp', []);
 		app.controller('homeController', function($scope, $http, $q) {
 			
+			$scope.payment = 0;
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
 			});
 			
-			$scope.currentOrderName = "Coffee";
-			$scope.currentOrderPrice = "3";
-			$scope.currentOrderStatus = "In Progress";
+			$scope.currentOrderName = "N/A";
+			$scope.currentOrderPrice = "N/A";
+			$scope.currentOrderStatus = "N/A";
 			
-			$scope.currentUser = {
-				username: localStorage.getItem('username'),
-				password: localStorage.getItem('password')
-			}
-			
-			$scope.reset = function(){
-				$scope.enteredUsername = "";
-				$scope.enteredPassword = "";
-				$scope.errorMessage = "";
-			}
+			$scope.currentUser = localStorage.getItem('username');
 			
 			$scope.refresh = function() {
-				$http.get("api/v1/orderInProgress").then(function(response) {
-					
+				$scope.multipleOrderError = false;
+				$scope.invalidPrice = false;
+				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
+					console.log(response);
+					$scope.currentOrderName = response.data.recipe.name;
+					$scope.currentOrderPrice = response.data.recipe.price;
+					if(response.data.isFulfilled) {
+						$scope.currentOrderStatus = "Fulfilled";
+					} else {
+						$scope.currentOrderStatus = "In Progress";
+					}
 				}, function(rejection) {
-					
+					console.log(rejection);
 				})
 			}
+			
+			$scope.refresh()
 			
 			$scope.placeOrder = function(param) {
 				for (let k = 0; k <  $scope.recipes.length; k++){
@@ -83,26 +86,38 @@
 						$scope.orderRecipe = $scope.recipes[k];
 					}
 				}
-				console.log($scope.orderRecipe.name);
-				console.log($scope.currentUser);
-				$scope.orderObject = {
-						recipe: $scope.orderRecipe,
-						user: $scope.currentUser,
+				
+				if($scope.orderRecipe.price  <= $scope.payment) {
+					$scope.orderObject = {
+							recipe: $scope.orderRecipe,
+							name: $scope.currentUser,
+					}
+					
+					//if($scope.currentOrderStatus == "Fulfilled") {
+						
+					//} else 
+						
+					if ($scope.currentOrderStatus != "N/A") {
+						$scope.multipleOrderError = true;
+					} else {
+						$http.post("api/v1/orders", $scope.orderObject).then(function(response) {
+							console.log(response);
+							$scope.refresh()
+						}, function(rejection) {
+							console.log(rejection);
+						})
+					}
+				} else {
+					$scope.invalidPrice = true;
 				}
-				$http.post("api/v1/orders/" + $scope.orderObject).then(function(response) {
-					console.log(response);			
-				}, function(rejection) {
-					console.log(rejection);
-				})
+				
+				
+				
 			}
 			
 			$scope.logout = function() {
 				window.location.href = "/login.html"
-				console.error("There was an error");
-				console.log("Logout successful.")
 			}
-			
-			
 		})
 			
 			
@@ -135,7 +150,7 @@
 		</table>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Refresh</button>
+			<button class="btn" type="button" ng-click = "refresh()" >Refresh</button>
 		</div>
 		
 		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
@@ -158,14 +173,20 @@
 		
 		<div id="centered">
 			<label for="username" id="inputLabel">Enter Payment: </label>
-			<input type="text" id="username">
+			<input type="text" id="username" ng-model="payment">
 		</div>
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click = "placeOrder(name)" >Order Coffee</button>
 		</div>
 		
+		<div>
+			<label ng-show=multipleOrderError>Error: Cannot place more than one unfulfilled order at a time.</label>
+		</div>
 		
+		<div>
+			<label ng-show=invalidPrice>Error: Invalid price.</label>
+		</div>
 		
 		<div id="centered">
 			<a href="login"><button>Logout</button></a>
