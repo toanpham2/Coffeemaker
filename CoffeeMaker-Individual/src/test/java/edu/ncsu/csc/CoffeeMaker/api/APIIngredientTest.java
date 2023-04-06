@@ -28,6 +28,14 @@ import edu.ncsu.csc.CoffeeMaker.common.TestUtils;
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.services.IngredientService;
 
+/**
+ * Tests API Ingredient functionalities
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith ( SpringExtension.class )
@@ -39,9 +47,11 @@ public class APIIngredientTest {
      */
     private MockMvc               mvc;
 
+    /** web application context for testing */
     @Autowired
     private WebApplicationContext context;
 
+    /** ingredient service for testing */
     @Autowired
     private IngredientService     service;
 
@@ -55,6 +65,12 @@ public class APIIngredientTest {
         service.deleteAll();
     }
 
+    /**
+     * Makes sure ingredient gets posted into the ingredient service
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void ensureIngredient () throws Exception {
@@ -68,11 +84,19 @@ public class APIIngredientTest {
 
     }
 
+    /**
+     * Test adding an ingredient with a duplicate name
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void testAddIngredient2 () throws Exception {
 
-        /* Tests a recipe with a duplicate name to make sure it's rejected */
+        /*
+         * Tests a ingredient with a duplicate name to make sure it's rejected
+         */
 
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Ingredients in the CoffeeMaker" );
         final Ingredient r1 = new Ingredient( "Coffee", 10 );
@@ -86,6 +110,12 @@ public class APIIngredientTest {
         Assertions.assertEquals( 1, service.findAll().size(), "There should be 2 ingredients in the CoffeeMaker" );
     }
 
+    /**
+     * Test getting ingredients
+     *
+     * @throws Exception
+     *             if there is a problem in getting
+     */
     @Test
     @Transactional
     public void testGetIngredient () throws Exception {
@@ -113,6 +143,12 @@ public class APIIngredientTest {
 
     }
 
+    /**
+     * Test deleting an ingredient
+     *
+     * @throws Exception
+     *             if there is a problem deleting
+     */
     @Test
     @Transactional
     public void testDeleteIngredient () throws Exception {
@@ -137,6 +173,12 @@ public class APIIngredientTest {
 
     }
 
+    /**
+     * Test updating an ingredient
+     *
+     * @throws Exception
+     *             if there is a problem putting
+     */
     @Test
     @Transactional
     public void testUpdateIngredient () throws Exception {

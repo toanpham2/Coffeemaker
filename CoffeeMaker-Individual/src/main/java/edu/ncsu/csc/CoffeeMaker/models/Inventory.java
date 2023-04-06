@@ -96,10 +96,11 @@ public class Inventory extends DomainObject {
         boolean isEnough = true;
         for ( int i = 0; i < ingredientsInv.size(); i++ ) {
             for ( int j = 0; j < r.ingredients.size(); j++ ) {
-                if ( ingredientsInv.get( i ).getType().equals( r.ingredients.get( j ).getType() ) ) {
-                    if ( ingredientsInv.get( i ).getAmount() < r.ingredients.get( j ).getAmount() ) {
-                        isEnough = false;
-                    }
+                if ( ( ingredientsInv.get( i ).getType().equals( r.ingredients.get( j ).getType() ) )
+                        && ( ingredientsInv.get( i ).getAmount() < r.ingredients.get( j ).getAmount() ) ) {
+
+                    isEnough = false;
+
                 }
             }
         }
@@ -143,13 +144,16 @@ public class Inventory extends DomainObject {
      * @return true if successful, false if not
      */
     public boolean updateIngredients ( final Ingredient ingredient ) {
-        if ( ingredient.getAmount() < 0 ) {
-            throw new IllegalArgumentException( "Amount cannot be negative" );
-        }
 
         for ( int i = 0; i < ingredientsInv.size(); i++ ) {
             if ( ingredient.getType().equals( ingredientsInv.get( i ).getType() ) ) {
-                ingredientsInv.get( i ).setAmount( ingredientsInv.get( i ).getAmount() + ingredient.getAmount() );
+                final int newAmount = ingredientsInv.get( i ).getAmount() + ingredient.getAmount();
+                if ( newAmount >= 0 ) {
+                    ingredientsInv.get( i ).setAmount( newAmount );
+                }
+                else {
+                    throw new IllegalArgumentException( "New total cannot be negative" );
+                }
             }
         }
         return true;

@@ -1,0 +1,198 @@
+<head>
+
+<title>My CoffeeMaker Home</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+		
+	}
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+	
+	.line{
+		padding-bottom: 20px;
+	}
+	
+	.btn{
+		width: 200px;
+	}
+	
+	#inputLabel {
+		font-size: 30px; 	
+	}
+	
+	th, td {
+		padding: 17px 70px;
+		border: 1px solid;
+	}
+	
+	table {
+  		border-collapse: collapse;
+	}
+	
+		
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('homeController', function($scope, $http, $q) {
+			
+			$scope.payment = 0;
+			$http.get("/api/v1/recipes").then(function(response) {
+				$scope.recipes = response.data;
+			});
+			
+			$scope.currentOrderName = "N/A";
+			$scope.currentOrderPrice = "N/A";
+			$scope.currentOrderStatus = "N/A";
+			
+			$scope.currentUser = localStorage.getItem('username');
+			
+			$scope.refresh = function() {
+				$scope.multipleOrderError = false;
+				$scope.invalidPrice = false;
+				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
+					console.log(response);
+					$scope.currentOrderName = response.data.recipe.name;
+					$scope.currentOrderPrice = response.data.recipe.price;
+					if(response.data.isFulfilled) {
+						$scope.currentOrderStatus = "Fulfilled";
+					} else {
+						$scope.currentOrderStatus = "In Progress";
+					}
+				}, function(rejection) {
+					console.log(rejection);
+				})
+			}
+			
+			$scope.refresh()
+			
+			$scope.placeOrder = function(param) {
+				for (let k = 0; k <  $scope.recipes.length; k++){
+					if($scope.recipes[k].name == param){
+						$scope.orderRecipe = $scope.recipes[k];
+					}
+				}
+				
+				if($scope.orderRecipe.price  <= $scope.payment) {
+					$scope.orderObject = {
+							recipe: $scope.orderRecipe,
+							name: $scope.currentUser,
+					}
+					
+					//if($scope.currentOrderStatus == "Fulfilled") {
+						
+					//} else 
+						
+					if ($scope.currentOrderStatus != "N/A") {
+						$scope.multipleOrderError = true;
+					} else {
+						$http.post("api/v1/orders", $scope.orderObject).then(function(response) {
+							console.log(response);
+							$scope.refresh()
+						}, function(rejection) {
+							console.log(rejection);
+						})
+					}
+				} else {
+					$scope.invalidPrice = true;
+				}
+				
+				
+				
+			}
+			
+			$scope.logout = function() {
+				window.location.href = "/login.html"
+			}
+		})
+			
+			
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="homeController">
+
+		<h1 style="text-align: center; font-size: 30px;">Current Order</h1>
+		
+		<table id="centered">
+		
+			<tr>
+				<th>Drink</th>
+				<th>Price</th>
+				<th>Status</th>
+			</tr>
+			
+			<tr>
+				<td>
+					<label> {{currentOrderName}} </label>
+				</td>
+				<td>
+					<label> {{currentOrderPrice}} </label>
+				</td>
+				<td>
+					<label> {{currentOrderStatus}} </label>
+				</td>
+			</tr>
+		
+		</table>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click = "refresh()" >Refresh</button>
+		</div>
+		
+		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
+		
+		<div id="centered">
+			<ul>
+				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
+						<input type="radio" ng-model="$parent.name" name="name"
+						value="{{recipe.name}}" required="true" />
+				</label></li>
+			</ul>
+			<br /> 
+
+			<div ng-show="submissionSuccess" class="success">Coffee was
+				made. Your change is {{change}}.</div>
+
+			<div ng-show="submissionFailure">An error occurred: {{error}}</div>
+
+		</div>
+		
+		<div id="centered">
+			<label for="username" id="inputLabel">Enter Payment: </label>
+			<input type="text" id="username" ng-model="payment">
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click = "placeOrder(name)" >Order Coffee</button>
+		</div>
+		
+		<div>
+			<label ng-show=multipleOrderError>Error: Cannot place more than one unfulfilled order at a time.</label>
+		</div>
+		
+		<div>
+			<label ng-show=invalidPrice>Error: Invalid price.</label>
+		</div>
+		
+		<div id="centered">
+			<a href="login"><button>Logout</button></a>
+		</div>
+		
+
+	</div>
+
+</body>

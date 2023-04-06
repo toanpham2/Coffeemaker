@@ -25,47 +25,62 @@ import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
+/**
+ * Tests Recipe object and its functionalities
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
 @SpringBootTest ( classes = TestConfig.class )
 public class RecipeTest {
 
+    /** recipe service used for testing */
     @Autowired
     private RecipeService service;
 
+    /**
+     * Sets up recipe service for testing
+     */
     @BeforeEach
     public void setup () {
         service.deleteAll();
     }
 
+    /**
+     * Test adding 2 recipes
+     */
     @Test
     @Transactional
     public void testAddRecipe () {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Black Coffee" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 1 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final List<Recipe> recipes = service.findAll();
@@ -75,6 +90,9 @@ public class RecipeTest {
         Assertions.assertEquals( r1, recipes.get( 0 ), "The retrieved recipe should match the created one" );
     }
 
+    /**
+     * Test saving a set of recipes where one is invalid
+     */
     @Test
     @Transactional
     public void testNoRecipes () {
@@ -83,28 +101,28 @@ public class RecipeTest {
         try {
             final Recipe r1 = new Recipe();
             r1.setName( "Tasty Drink" );
-            final Ingredient Coffee = new Ingredient( "Coffee", -12 );
-            final Ingredient Milk = new Ingredient( "Milk", 0 );
-            final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-            final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-            r1.addIngredient( Coffee );
-            r1.addIngredient( Milk );
-            r1.addIngredient( Sugar );
-            r1.addIngredient( Chocolate );
+            final Ingredient coffee = new Ingredient( "Coffee", -12 );
+            final Ingredient milk = new Ingredient( "Milk", 0 );
+            final Ingredient sugar = new Ingredient( "Sugar", 0 );
+            final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+            r1.addIngredient( coffee );
+            r1.addIngredient( milk );
+            r1.addIngredient( sugar );
+            r1.addIngredient( chocolate );
             r1.setPrice( 12 );
             service.save( r1 );
 
             final Recipe r2 = new Recipe();
             r2.setName( "Mocha" );
             r2.setPrice( 1 );
-            final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-            final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-            final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-            final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-            r2.addIngredient( Coffee2 );
-            r2.addIngredient( Milk2 );
-            r2.addIngredient( Sugar2 );
-            r2.addIngredient( Chocolate2 );
+            final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+            final Ingredient milk2 = new Ingredient( "Milk", 1 );
+            final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+            final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+            r2.addIngredient( coffee2 );
+            r2.addIngredient( milk2 );
+            r2.addIngredient( sugar2 );
+            r2.addIngredient( chocolate2 );
             service.save( r2 );
 
             final List<Recipe> recipes = List.of( r1, r2 );
@@ -118,6 +136,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding one recipe
+     */
     @Test
     @Transactional
     public void testAddRecipe1 () {
@@ -126,14 +147,14 @@ public class RecipeTest {
         final String name = "Coffee";
         final Recipe r1 = new Recipe();
         r1.setName( name );
-        final Ingredient Coffee = new Ingredient( "Coffee", 12 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 12 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
 
         service.save( r1 );
@@ -143,8 +164,9 @@ public class RecipeTest {
 
     }
 
-    /* Test2 is done via the API for different validation */
-
+    /**
+     * Test2 is done via the API for different validation
+     */
     @Test
     @Transactional
     public void testAddRecipe3 () {
@@ -153,14 +175,14 @@ public class RecipeTest {
         // final Recipe r1 = createRecipe( name, -50, 3, 1, 1, 0 );
         final Recipe r1 = new Recipe();
         r1.setName( name );
-        final Ingredient Coffee = new Ingredient( "Coffee", 5 );
-        final Ingredient Milk = new Ingredient( "Milk", 3 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 5 );
+        final Ingredient milk = new Ingredient( "Milk", 3 );
+        final Ingredient sugar = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( -12 );
         try {
             service.save( r1 );
@@ -174,6 +196,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding recipe with invalid coffee amount
+     */
     @Test
     @Transactional
     public void testAddRecipe4 () {
@@ -184,14 +209,14 @@ public class RecipeTest {
         r1.setName( name );
 
         try {
-            final Ingredient Coffee = new Ingredient( "Coffee", -15 );
-            final Ingredient Milk = new Ingredient( "Milk", 3 );
-            final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-            final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-            r1.addIngredient( Coffee );
-            r1.addIngredient( Milk );
-            r1.addIngredient( Sugar );
-            r1.addIngredient( Chocolate );
+            final Ingredient coffee = new Ingredient( "Coffee", -15 );
+            final Ingredient milk = new Ingredient( "Milk", 3 );
+            final Ingredient sugar = new Ingredient( "Sugar", 1 );
+            final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+            r1.addIngredient( coffee );
+            r1.addIngredient( milk );
+            r1.addIngredient( sugar );
+            r1.addIngredient( chocolate );
             r1.setPrice( 12 );
             service.save( r1 );
 
@@ -204,6 +229,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding recipe with invalid milk amount
+     */
     @Test
     @Transactional
     public void testAddRecipe5 () {
@@ -214,14 +242,14 @@ public class RecipeTest {
         r1.setName( name );
 
         try {
-            final Ingredient Coffee = new Ingredient( "Coffee", 15 );
-            final Ingredient Milk = new Ingredient( "Milk", -3 );
-            final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-            final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-            r1.addIngredient( Coffee );
-            r1.addIngredient( Milk );
-            r1.addIngredient( Sugar );
-            r1.addIngredient( Chocolate );
+            final Ingredient coffee = new Ingredient( "Coffee", 15 );
+            final Ingredient milk = new Ingredient( "Milk", -3 );
+            final Ingredient sugar = new Ingredient( "Sugar", 1 );
+            final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+            r1.addIngredient( coffee );
+            r1.addIngredient( milk );
+            r1.addIngredient( sugar );
+            r1.addIngredient( chocolate );
             r1.setPrice( 12 );
             service.save( r1 );
 
@@ -234,6 +262,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding recipe with invalid sugar amount
+     */
     @Test
     @Transactional
     public void testAddRecipe6 () {
@@ -244,14 +275,14 @@ public class RecipeTest {
         r1.setName( name );
 
         try {
-            final Ingredient Coffee = new Ingredient( "Coffee", 15 );
-            final Ingredient Milk = new Ingredient( "Milk", 3 );
-            final Ingredient Sugar = new Ingredient( "Sugar", -1 );
-            final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-            r1.addIngredient( Coffee );
-            r1.addIngredient( Milk );
-            r1.addIngredient( Sugar );
-            r1.addIngredient( Chocolate );
+            final Ingredient coffee = new Ingredient( "Coffee", 15 );
+            final Ingredient milk = new Ingredient( "Milk", 3 );
+            final Ingredient sugar = new Ingredient( "Sugar", -1 );
+            final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+            r1.addIngredient( coffee );
+            r1.addIngredient( milk );
+            r1.addIngredient( sugar );
+            r1.addIngredient( chocolate );
             r1.setPrice( 12 );
             service.save( r1 );
 
@@ -264,6 +295,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding recipe with invalid chocolate amount
+     */
     @Test
     @Transactional
     public void testAddRecipe7 () {
@@ -274,14 +308,14 @@ public class RecipeTest {
         r1.setName( name );
 
         try {
-            final Ingredient Coffee = new Ingredient( "Coffee", 15 );
-            final Ingredient Milk = new Ingredient( "Milk", 3 );
-            final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-            final Ingredient Chocolate = new Ingredient( "Chocolate", -2 );
-            r1.addIngredient( Coffee );
-            r1.addIngredient( Milk );
-            r1.addIngredient( Sugar );
-            r1.addIngredient( Chocolate );
+            final Ingredient coffee = new Ingredient( "Coffee", 15 );
+            final Ingredient milk = new Ingredient( "Milk", 3 );
+            final Ingredient sugar = new Ingredient( "Sugar", 1 );
+            final Ingredient chocolate = new Ingredient( "Chocolate", -2 );
+            r1.addIngredient( coffee );
+            r1.addIngredient( milk );
+            r1.addIngredient( sugar );
+            r1.addIngredient( chocolate );
             r1.setPrice( 12 );
             service.save( r1 );
 
@@ -294,6 +328,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding 2 valid recipes
+     */
     @Test
     @Transactional
     public void testAddRecipe13 () {
@@ -306,28 +343,28 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         Assertions.assertEquals( 2, service.count(),
@@ -335,6 +372,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test adding 3 recipes
+     */
     @Test
     @Transactional
     public void testAddRecipe14 () {
@@ -349,41 +389,41 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         Assertions.assertEquals( 3, service.count(),
@@ -391,6 +431,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test deleting recipe
+     */
     @Test
     @Transactional
     public void testDeleteRecipe1 () {
@@ -401,14 +444,14 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 3 );
-        final Ingredient Milk = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 3 );
+        final Ingredient milk = new Ingredient( "Milk", 1 );
+        final Ingredient sugar = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
@@ -418,6 +461,9 @@ public class RecipeTest {
         Assertions.assertEquals( 0, service.findAll().size(), "There should be no Recipes in the CoffeeMaker" );
     }
 
+    /**
+     * Test deleting 3 recipes
+     */
     @Test
     @Transactional
     public void testDeleteRecipe2 () {
@@ -432,41 +478,41 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         Assertions.assertEquals( 3, service.count(), "There should be three recipes in the database" );
@@ -477,6 +523,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test deleting recipes
+     */
     @Test
     @Transactional
     public void testDeleteRecipe3 () {
@@ -502,41 +551,41 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         Assertions.assertEquals( 3, service.count(), "There should be four recipes in the database" );
@@ -555,6 +604,9 @@ public class RecipeTest {
         // be 0 recipes in the CoffeeMaker" );
     }
 
+    /**
+     * Test deleting recipes
+     */
     @Test
     @Transactional
     public void testDeleteRecipe4 () {
@@ -564,14 +616,14 @@ public class RecipeTest {
         // service.save( r1 );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
@@ -584,14 +636,14 @@ public class RecipeTest {
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
         Assertions.assertEquals( 1, service.count(), "There should be two recipes in the database" );
 
@@ -600,14 +652,14 @@ public class RecipeTest {
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
         Assertions.assertEquals( 2, service.count(), "There should be three recipes in the database" );
 
@@ -624,6 +676,9 @@ public class RecipeTest {
         Assertions.assertEquals( 0, service.findAll().size(), "There should be 0 recipes in the CoffeeMaker" );
     }
 
+    /**
+     * Test deleting recipes
+     */
     @Test
     @Transactional
     public void testDeleteRecipe5 () {
@@ -636,28 +691,28 @@ public class RecipeTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
         // final Recipe r2 = createRecipe( "Coffee 2", 50, 3, 3, 3, 3 );
         // service.save( r2 );
@@ -676,6 +731,9 @@ public class RecipeTest {
         Assertions.assertEquals( 2, service.count(), "There should be 2 recipes in the database" );
     }
 
+    /**
+     * Test deleting recipes
+     */
     @Test
     @Transactional
     public void testDeleteRecipe6 () {
@@ -685,14 +743,14 @@ public class RecipeTest {
         // service.save( r1 );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
         Assertions.assertEquals( 1, service.count(), "There should be one recipe in the database" );
@@ -705,14 +763,14 @@ public class RecipeTest {
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
         Assertions.assertEquals( 1, service.count(), "There should be two recipes in the database" );
 
@@ -724,14 +782,14 @@ public class RecipeTest {
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
         Assertions.assertEquals( 1, service.count(), "There should be three recipes in the database" );
 
@@ -740,6 +798,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test editing recipe
+     */
     @Test
     @Transactional
     public void testEditRecipe1 () {
@@ -749,14 +810,14 @@ public class RecipeTest {
         // service.save( r1 );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
         r1.setPrice( 70 );
@@ -789,20 +850,23 @@ public class RecipeTest {
     // return recipe;
     // }
 
+    /**
+     * Test toString method for recipe
+     */
     @Test
     @Transactional
     public void testToString () {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
         assertEquals(
@@ -815,6 +879,9 @@ public class RecipeTest {
 
     }
 
+    /**
+     * Test equals method for recipe
+     */
     @Test
     @Transactional
     public void testEqual () {
@@ -824,41 +891,41 @@ public class RecipeTest {
         // final Recipe r4 = createRecipe( null, 50, 3, 1, 1, 0 );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Tasty Drink" );
         r2.setPrice( 12 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         service.save( r1 );
@@ -870,6 +937,9 @@ public class RecipeTest {
         // assertFalse( r4.equals( r3 ) );
     }
 
+    /**
+     * Test hash codes for recipe
+     */
     @Test
     @Transactional
     public void testEqualRecipe () {
@@ -889,41 +959,41 @@ public class RecipeTest {
         // assertFalse( r5.checkRecipe() );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         // final Recipe r6 = createRecipe( "Fake Coffee", 50, 0, 0, 0, 0 );
@@ -937,6 +1007,9 @@ public class RecipeTest {
         assertNotEquals( r1.hashCode(), r2.hashCode() );
     }
 
+    /**
+     * Test exists by id method for recipe
+     */
     @Test
     @Transactional
     public void testExistsById () {
@@ -945,41 +1018,41 @@ public class RecipeTest {
         // final Recipe r3 = createRecipe( "NotCoffee", 50, 3, 1, 1, 0 );
         final Recipe r1 = new Recipe();
         r1.setName( "Tasty Drink" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 12 );
         service.save( r1 );
 
         final Recipe r2 = new Recipe();
         r2.setName( "Mocha" );
         r2.setPrice( 1 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 1 );
-        r2.addIngredient( Coffee2 );
-        r2.addIngredient( Milk2 );
-        r2.addIngredient( Sugar2 );
-        r2.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 1 );
+        r2.addIngredient( coffee2 );
+        r2.addIngredient( milk2 );
+        r2.addIngredient( sugar2 );
+        r2.addIngredient( chocolate2 );
         service.save( r2 );
 
         final Recipe r3 = new Recipe();
         r3.setName( "newMocha" );
         r3.setPrice( 1 );
-        final Ingredient Coffee3 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk3 = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar3 = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate3 = new Ingredient( "Chocolate", 1 );
-        r3.addIngredient( Coffee3 );
-        r3.addIngredient( Milk3 );
-        r3.addIngredient( Sugar3 );
-        r3.addIngredient( Chocolate3 );
+        final Ingredient coffee3 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk3 = new Ingredient( "Milk", 1 );
+        final Ingredient sugar3 = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate3 = new Ingredient( "Chocolate", 1 );
+        r3.addIngredient( coffee3 );
+        r3.addIngredient( milk3 );
+        r3.addIngredient( sugar3 );
+        r3.addIngredient( chocolate3 );
         service.save( r3 );
 
         service.save( r1 );
@@ -990,23 +1063,26 @@ public class RecipeTest {
         assertTrue( service.existsById( r3.getId() ) );
     }
 
+    /**
+     * Test editing recipe
+     */
     @Test
     @Transactional
     public void testEditRecipe () {
         final Recipe r1 = new Recipe();
         r1.setName( "Coffee" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 20 );
-        final Ingredient Milk = new Ingredient( "Milk", 10 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 10 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 10 );
+        final Ingredient coffee = new Ingredient( "Coffee", 20 );
+        final Ingredient milk = new Ingredient( "Milk", 10 );
+        final Ingredient sugar = new Ingredient( "Sugar", 10 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 10 );
 
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
 
-        Chocolate.setAmount( 10 );
-        r1.updateIngredient( Chocolate );
+        chocolate.setAmount( 10 );
+        r1.updateIngredient( chocolate );
 
         assertEquals( (Integer) 10, r1.getOneIngredient( "Chocolate" ).getAmount() );
 

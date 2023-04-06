@@ -22,7 +22,7 @@ public class MappingController {
      *            underlying UI model
      * @return contents of the page
      */
-    @GetMapping ( { "/index", "/" } )
+    @GetMapping ( { "/index", "/index.html" } )
     public String index ( final Model model ) {
         return "index";
     }
@@ -115,9 +115,58 @@ public class MappingController {
      *            underlying UI model
      * @return contents of the page
      */
-    @GetMapping ( { "/makecoffee", "/makecoffee.html" } )
-    public String makeCoffeeForm ( final Model model ) {
-        return "makecoffee";
+    @GetMapping ( { "/customerhome", "/customerhome.html" } )
+    public String customerHomeForm ( final Model model ) {
+        return "customerhome";
+    }
+
+    /**
+     * On a GET request to /makecoffee, the MakeCoffeeController will return
+     * /src/main/resources/templates/makecoffee.html.
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/login", "/" } )
+    public String loginForm ( final Model model ) {
+        return "login";
+    }
+
+    /**
+     * Maps to create account page
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/createaccount", "/createaccount.html" } )
+    public String createAccountForm ( final Model model ) {
+        return "createaccount";
+    }
+
+    /**
+     * Maps to home page for staff
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/staffhome", "/staffhome.html" } )
+    public String staffHomeForm ( final Model model ) {
+        return "staffhome";
+    }
+
+    /**
+     * maps to the page for staff to fulfill an order
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/fulfillorder", "/fulfillorder.html" } )
+    public String fulfillOrder ( final Model model ) {
+        return "fulfillorder";
     }
 
 }

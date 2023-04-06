@@ -23,17 +23,28 @@ import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
+/**
+ * Tests purchasing beverages with the api calls
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @ExtendWith ( SpringExtension.class )
 @SpringBootTest
 @AutoConfigureMockMvc
 public class APICoffeeTest {
 
+    /** mvc for testing */
     @Autowired
     private MockMvc          mvc;
 
+    /** recipe service for testing */
     @Autowired
     private RecipeService    service;
 
+    /** inventory service for testing */
     @Autowired
     private InventoryService iService;
 
@@ -63,6 +74,12 @@ public class APICoffeeTest {
         service.save( recipe );
     }
 
+    /**
+     * Tests purchasing one beverage
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void testPurchaseBeverage1 () throws Exception {
@@ -75,6 +92,12 @@ public class APICoffeeTest {
 
     }
 
+    /**
+     * Tests purchasing a drink with insufficient amount of money
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void testPurchaseBeverage2 () throws Exception {
@@ -88,6 +111,12 @@ public class APICoffeeTest {
 
     }
 
+    /**
+     * Test purchasing drink when there is insufficient inventory
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void testPurchaseBeverage3 () throws Exception {

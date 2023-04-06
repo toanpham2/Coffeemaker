@@ -30,7 +30,7 @@ import edu.ncsu.csc.CoffeeMaker.models.DomainObject;
  * @author Bruno Volpato da Cunha
  *
  */
-abstract public class Service <T extends DomainObject, K> {
+abstract public class Service<T extends DomainObject, K> {
 
     /**
      * Returns the Repository that Spring uses for interacting with the

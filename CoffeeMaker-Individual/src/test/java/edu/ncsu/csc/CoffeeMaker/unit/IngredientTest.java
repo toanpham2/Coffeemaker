@@ -10,16 +10,32 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.services.IngredientService;
 
+/**
+ * Tests the Ingredient object
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 public class IngredientTest {
 
+    /** ingredient service used for testing */
     @Autowired
     private IngredientService service;
 
+    /**
+     * Sets up the ingredient service for testing
+     *
+     */
     @BeforeEach
     public void setup () {
         service.deleteAll();
     }
 
+    /**
+     * Test getting the amount of an ingredient
+     */
     @Test
     @Transactional
     public void testGetAmount () {
@@ -30,6 +46,9 @@ public class IngredientTest {
         assertEquals( 0, ingredient1.getAmount() );
     }
 
+    /**
+     * Test getting the type of ingredient
+     */
     @Test
     @Transactional
     public void testGetType () {
@@ -40,6 +59,9 @@ public class IngredientTest {
         assertEquals( "Chocolate", ingredient1.getType() );
     }
 
+    /**
+     * Test the toString method in Ingredient
+     */
     @Test
     @Transactional
     public void testToString () {

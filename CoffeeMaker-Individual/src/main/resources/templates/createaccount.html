@@ -1,0 +1,116 @@
+<head>
+
+<title>Create Account</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+		
+	}
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+	
+	.line{
+		padding-bottom: 20px;
+	}
+	
+	.btn{
+		width: 200px;
+	}
+	
+	#inputLabel {
+		font-size: 30px; 	
+	}
+	
+		
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('createaccountController', function($scope, $http, $q) {
+			
+
+			
+			$scope.reset = function(){
+				$scope.enteredUsername = "";
+				$scope.enteredPassword = "";
+				$scope.enteredStaffCode = "";
+			}
+			
+			
+			$scope.createAccount = function(isStaff){
+				$scope.user = {
+						"username": $scope.enteredUsername,
+						"password": $scope.enteredPassword,
+						"submittedStaffCode": $scope.enteredStaffCode,
+						"isStaff": isStaff
+					}
+					
+					$http.post("api/v1/users", $scope.user).then(function(response) {
+						$scope.response = response
+						$scope.reset()
+					}, function(rejection){
+						$scope.response = rejection
+						$scope.enteredStaffCode = "";
+					})
+			}
+			
+				
+
+			
+			$scope.reset()
+			
+		})
+		/*]]>*/
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="createaccountController">
+
+		<h1 style="text-align: center; font-size: 75px;">Coffee Maker</h1>
+		
+		<div id="centered">
+			<label for="username" id="inputLabel">Username: </label>
+			<input type="text" id="username" ng-model="enteredUsername">
+		</div>
+		
+		<div id="centered">
+			<label for="password" id="inputLabel">Password: </label>
+			<input type="password" id="password" ng-model="enteredPassword">
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click="createAccount(false)" >Create Customer Account</button>
+		</div>
+		
+		<div id="centered">
+			<label for="staffCode" id="inputLabel">If you are making a staff account, enter the code: </label>
+			<input type="text" id="staffCode" ng-model="enteredStaffCode">
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button"  ng-click="createAccount(true)" >Create Staff Account</button>
+		</div>
+		
+		<div id="centered">
+			<a href="login"><button>Return to Login</button></a>
+		</div>
+		
+		<div id="centered">
+			<p>	{{response.data.message}}  </p>
+		</div>
+
+	</div>
+
+</body>
