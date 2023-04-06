@@ -94,13 +94,12 @@ public class APIInventoryController extends APIController {
         if ( ingredients != null ) {
 
             for ( final Ingredient i : ingredients ) {
-                if ( i.getAmount() < 0 ) {
+                try {
+                    inventoryCurrent.updateIngredients( i );
+                }
+                catch ( final IllegalArgumentException e ) {
                     return new ResponseEntity( errorResponse( "Can't have negitive amount" ), HttpStatus.BAD_REQUEST );
                 }
-            }
-
-            for ( final Ingredient i : ingredients ) {
-                inventoryCurrent.updateIngredients( i );
             }
 
         }

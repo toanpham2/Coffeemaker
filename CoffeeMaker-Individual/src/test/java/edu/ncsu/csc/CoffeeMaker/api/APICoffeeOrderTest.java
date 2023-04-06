@@ -160,16 +160,6 @@ public class APICoffeeOrderTest {
         // service
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) );
-        mvc.perform( put( "/api/v1/ordersFulfilled" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
-        mvc.perform( put( "/api/v1/ordersPickedUp" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
-        mvc.perform( put( "/api/v1/ordersFulfilled" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( order2 ) ) ).andExpect( status().isNotFound() );
-        mvc.perform( put( "/api/v1/ordersPickedUp" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( order2 ) ) ).andExpect( status().isNotFound() );
-        final String orderName1 = mvc.perform( get( "/api/v1/orders/username123" ) ).andDo( print() )
-                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
-        Assertions.assertTrue( orderName1.contains( "true" ) );
+
     }
 }

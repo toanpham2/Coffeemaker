@@ -71,27 +71,19 @@
 			
 			
 			$scope.updateInventory = function(ingredients) {
-				console.log(ingredients);
-				$http.get("api/v1/inventory").then(function(response) {
-					$scope.ingredients = response.data.ingredients;
-					console.log($scope.ingredients);
-					for (let i = 0; i <  $scope.ingredients.length; i++){
-						$scope.ingredients[i].name;
-						ingredients[i].name;
-						if($scope.ingredients[i].name == ingredients[i].name) {
-							$scope.ingredients[i].amount = $scope.ingredients[i].amount - ingredients[i].amount;
-						}
-					}
-					console.log($scope.ingredients);
-					$http.put("api/v1/inventory", $scope.ingredients).then(function(response) {
-						console.log(response);
-					}, function(rejection) {
-						console.error(rejection);
-					})
+					
+				$scope.ingredients = []
+				for(let i = 0; i < ingredients.length; i++){
+					$scope.ingredients.push(ingredients[i])
+					$scope.ingredients[i].amount *= -1
+				}
+				
+				console.log($scope.ingredients);
+				$http.put("api/v1/inventory", $scope.ingredients).then(function(response) {
+					console.log(response);
 				}, function(rejection) {
 					console.error(rejection);
 				})
-				
 				
 			}
 			
@@ -111,8 +103,9 @@
 				
 			}
 			
-			
 		})
+			
+			
 		/*]]>*/
 	</script>
 	
