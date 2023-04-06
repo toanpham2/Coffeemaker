@@ -133,11 +133,25 @@ public class MappingController {
         return "login";
     }
 
+    /**
+     * Maps to create account page
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
     @GetMapping ( { "/createaccount", "/createaccount.html" } )
     public String createAccountForm ( final Model model ) {
         return "createaccount";
     }
 
+    /**
+     * Maps to home page for staff
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
     @GetMapping ( { "/staffhome", "/staffhome.html" } )
     public String staffHomeForm ( final Model model ) {
         return "staffhome";

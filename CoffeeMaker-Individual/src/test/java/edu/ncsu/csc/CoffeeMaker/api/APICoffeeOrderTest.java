@@ -48,15 +48,17 @@ import edu.ncsu.csc.CoffeeMaker.services.UserService;
 @ExtendWith ( SpringExtension.class )
 public class APICoffeeOrderTest {
 
+    /** ingredient service used for testing */
     @Autowired
-    private IngredientService     IngService;
+    private IngredientService     ingService;
 
+    /** inventory service used for testing */
     @Autowired
-    private InventoryService      InService;
+    private InventoryService      inService;
 
     /** user service for testing */
     @Autowired
-    private UserService           UserService;
+    private UserService           userService;
 
     /** user service for testing */
     @Autowired
@@ -85,9 +87,9 @@ public class APICoffeeOrderTest {
 
         service.deleteAll();
         recipeService.deleteAll();
-        UserService.deleteAll();
-        InService.deleteAll();
-        IngService.deleteAll();
+        userService.deleteAll();
+        inService.deleteAll();
+        ingService.deleteAll();
     }
 
     /**
@@ -101,14 +103,14 @@ public class APICoffeeOrderTest {
     public void testCreatandGetOrder () throws Exception {
         final Recipe r1 = new Recipe();
         r1.setName( "Black Coffee" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 10 );
-        final Ingredient Milk = new Ingredient( "Milk", 10 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 10 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 10 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 10 );
+        final Ingredient milk = new Ingredient( "Milk", 10 );
+        final Ingredient sugar = new Ingredient( "Sugar", 10 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 10 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 1 );
 
         final User user1 = new User( "username123", "pass123", "n/a", false );
@@ -117,24 +119,24 @@ public class APICoffeeOrderTest {
         final CoffeeOrder order1 = new CoffeeOrder( r1, user1.getUsername() );
         final CoffeeOrder order2 = new CoffeeOrder( r1, user2.getUsername() );
         final List<Ingredient> ingList = new ArrayList<Ingredient>();
-        ingList.add( Chocolate );
-        ingList.add( Coffee );
-        ingList.add( Sugar );
+        ingList.add( chocolate );
+        ingList.add( coffee );
+        ingList.add( sugar );
         mvc.perform( put( "/api/v1/inventory/Chocolate" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( Chocolate ) ) ).andExpect( status().isOk() );
+                .content( TestUtils.asJsonString( chocolate ) ) ).andExpect( status().isOk() );
 
         mvc.perform( put( "/api/v1/inventory/Milk" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( Milk ) ) ).andExpect( status().isOk() );
+                .content( TestUtils.asJsonString( milk ) ) ).andExpect( status().isOk() );
 
         mvc.perform( put( "/api/v1/inventory/Coffee" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( Coffee ) ) ).andExpect( status().isOk() );
+                .content( TestUtils.asJsonString( coffee ) ) ).andExpect( status().isOk() );
 
         mvc.perform( put( "/api/v1/inventory/Sugar" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( Sugar ) ) ).andExpect( status().isOk() );
+                .content( TestUtils.asJsonString( sugar ) ) ).andExpect( status().isOk() );
 
         // Inventory i = mvc.perform( get( "/api/v1/inventory" ) ).andDo(
         // print() ).andExpect( status().isOk() ).andReturn().;
-        UserService.save( user1 );
+        userService.save( user1 );
         recipeService.save( r1 );
 
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
@@ -149,10 +151,10 @@ public class APICoffeeOrderTest {
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isConflict() ).andReturn()
                 .getResponse().getContentAsString();
-        final String orders = mvc.perform( get( "/api/v1/orders" ) ).andDo( print() ).andExpect( status().isOk() )
+        mvc.perform( get( "/api/v1/orders" ) ).andDo( print() ).andExpect( status().isOk() ).andReturn().getResponse()
+                .getContentAsString();
+        mvc.perform( get( "/api/v1/orders/username133" ) ).andDo( print() ).andExpect( status().isNotFound() )
                 .andReturn().getResponse().getContentAsString();
-        final String orderFalseGet = mvc.perform( get( "/api/v1/orders/username133" ) ).andDo( print() )
-                .andExpect( status().isNotFound() ).andReturn().getResponse().getContentAsString();
         final Long id = service.findByName( "username123" ).getId();
 
         mvc.perform( delete( "/api/v1/orders/" + id.toString() ).contentType( MediaType.APPLICATION_JSON )

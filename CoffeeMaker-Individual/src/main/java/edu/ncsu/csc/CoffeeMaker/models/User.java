@@ -51,8 +51,10 @@ public class User extends DomainObject {
      *            username for user
      * @param password
      *            password for user
-     * @param staffCode
+     * @param submittedStaffCode
      *            code to indicate if a user is staff or not
+     * @param isStaff
+     *            true if user is staff, false otherwise
      */
     public User ( final String username, final String password, final String submittedStaffCode,
             final boolean isStaff ) {

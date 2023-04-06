@@ -14,14 +14,26 @@ import edu.ncsu.csc.CoffeeMaker.TestConfig;
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.services.IngredientService;
 
+/**
+ * Tests generating ingredients with database
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @RunWith ( SpringRunner.class )
 @EnableAutoConfiguration
 @SpringBootTest ( classes = TestConfig.class )
 public class GenerateIngredients {
 
+    /** ingredient service used for testing */
     @Autowired
     private IngredientService ingredientService;
 
+    /**
+     * Test creating ingredients
+     */
     @Test
     @Transactional
     public void testCreateIngredients () {

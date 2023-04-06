@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 import edu.ncsu.csc.CoffeeMaker.models.CoffeeOrder;
 import edu.ncsu.csc.CoffeeMaker.repositories.OrderRepository;
 
+/**
+ * Order service to keep track of all Orders.
+ *
+ * @author tgpham
+ *
+ */
 @Component
 @Transactional
 public class OrderService extends Service<CoffeeOrder, Long> {
@@ -19,6 +25,9 @@ public class OrderService extends Service<CoffeeOrder, Long> {
     @Autowired
     private OrderRepository orderRepository;
 
+    /**
+     * Gets the order repository
+     */
     @Override
     protected JpaRepository<CoffeeOrder, Long> getRepository () {
         return orderRepository;
