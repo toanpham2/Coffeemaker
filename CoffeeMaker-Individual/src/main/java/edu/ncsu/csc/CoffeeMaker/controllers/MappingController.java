@@ -143,4 +143,9 @@ public class MappingController {
         return "staffhome";
     }
 
+    @GetMapping ( { "/fulfillorder", "/fulfillorder.html" } )
+    public String fulfillOrder ( final Model model ) {
+        return "fulfillorder";
+    }
+
 }

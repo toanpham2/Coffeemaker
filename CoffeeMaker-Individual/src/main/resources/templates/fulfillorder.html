@@ -50,7 +50,62 @@
 		var app = angular.module('myApp', []);
 		app.controller('fulfillorderController', function($scope, $http, $q) {
 			
+			$scope.refresh = function() {
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.temp = response.data;
+					$scope.orders = [];
+					for (let k = 0; k <  $scope.temp.length; k++){
+						if(!$scope.temp[k].isFulfilled){
+							$scope.orders.push($scope.temp[k]);
+						}
+					}
+					console.log($scope.orders);
+				});
+			}
+			
+			$scope.refresh()
+			
+			$scope.home = function(){
+				window.location.href = "/staffhome.html"
+			}
+			
+			
+			$scope.updateInventory = function(ingredients) {
+					
+				$scope.ingredients = []
+				for(let i = 0; i < ingredients.length; i++){
+					$scope.ingredients.push(ingredients[i])
+					$scope.ingredients[i].amount *= -1
+				}
+				
+				console.log($scope.ingredients);
+				$http.put("api/v1/inventory", $scope.ingredients).then(function(response) {
+					console.log(response);
+				}, function(rejection) {
+					console.error(rejection);
+				})
+				
+			}
+			
+			$scope.fulfill = function(order) {
+				console.log(order);
+				$scope.orderObject = {
+					recipe: order.recipe,
+					name: order.name,
+				}
+				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+					console.log(response);
+					$scope.refresh()
+					$scope.updateInventory(order.recipe.ingredients);
+				}, function(rejection) {
+					console.log(rejection);
+				})
+				
+			}
+			
 		})
+			
+			
 		/*]]>*/
 	</script>
 	
@@ -60,22 +115,31 @@
 		
 		<table id="centered">
 		
+		
+			<br /> 
+		
 			<tr>
 				<th>Customer</th>
 				<th>Order</th>
 				<th>Fulfill</th>
 			</tr>
 			
-			<tr>
-				<td>Joe</td>
-				<td>Coffee</td>
-				<td><button type="button">fulfill</button></td>
+			
+			<tr ng-repeat="order in orders">
+						<td><label>{{order.name}}</label></th>
+						<td><label>{{order.recipe.name}}</label></th>
+						<td>
+							<label>
+									<button type="button" ng-click=fulfill(order)>FULFILL</button>
+							</label>
+						</th>
+						
 			</tr>
 		
 		</table>
 		
 		<div id="centered">
-			<button class="btn" type="button" >Home</button>
+			<button class="btn" type="button" ng-click=home() >Home</button>
 		</div>
 		
 		

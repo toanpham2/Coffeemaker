@@ -103,7 +103,7 @@ public class APIOrderController extends APIController {
      *            the order to edit
      * @return Response Entity
      */
-    @PutMapping ( BASE_PATH + "/ordersFulfilled" )
+    @PutMapping ( BASE_PATH + "/orders" )
     public ResponseEntity updateOrdersFulfilled ( @RequestBody final CoffeeOrder order ) {
         final CoffeeOrder o = service.findByName( order.getName() );
         final Inventory inventory = inventoryService.getInventory();
@@ -112,7 +112,7 @@ public class APIOrderController extends APIController {
                     HttpStatus.NOT_FOUND );
         }
         for ( int i = 0; i < o.getRecipe().getAllIngredients().size(); i++ ) {
-            if ( o.getRecipe().getAllIngredients().get( i ).getAmount() < inventory
+            if ( o.getRecipe().getAllIngredients().get( i ).getAmount() > inventory
                     .getOneIngredient( o.getRecipe().getAllIngredients().get( i ).getType() ).getAmount() ) {
                 return new ResponseEntity( errorResponse( "does not have enough Inventory" ), HttpStatus.CONFLICT );
             }

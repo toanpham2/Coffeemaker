@@ -50,18 +50,19 @@
 			
 			$scope.login = function() {
 				localStorage.setItem('username', $scope.enteredUsername);
-				localStorage.setItem('password', $scope.enteredPassword);
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
-					if(response.data.isStaff){
-						localStorage.setItem('staffcode', 'OnePiece');
-						localStorage.setItem('isstaff', 'true');
-						window.location.href = "/staffhome.html"
+					if(response.data.password == $scope.enteredPassword){
+						if(response.data.isStaff){
+							window.location.href = "/staffhome.html"
+						}
+						else{
+							window.location.href = "/customerhome.html"
+						}
 					}
 					else{
-						localStorage.setItem('staffcode', $scope.enteredUsername);
-						localStorage.setItem('isstaff', $scope.enteredPassword);
-						window.location.href = "/customerhome.html"
+						$scope.errorMessage = "invalid password"
 					}
+
 				}, function(rejection){
 					$scope.errorMessage = "login failed"
 					$scope.enteredPassword = "";
