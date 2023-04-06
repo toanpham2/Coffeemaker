@@ -1,5 +1,6 @@
 package edu.ncsu.csc.CoffeeMaker.api;
 
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -161,5 +162,20 @@ public class APICoffeeOrderTest {
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) );
 
+        mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
+
+        final String fulfilledOrder = mvc.perform( get( "/api/v1/orders/username123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        assertTrue( fulfilledOrder.contains( "\"isFulfilled\":true,\"isPickedUp\":false" ) );
+
+        mvc.perform( put( "/api/v1/ordersPickedUp" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
+
+        final String pickedupOrder = mvc.perform( get( "/api/v1/orders" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+
+        assertTrue( pickedupOrder.contains( "\"isFulfilled\":true,\"isPickedUp\":true" ) );
     }
 }
