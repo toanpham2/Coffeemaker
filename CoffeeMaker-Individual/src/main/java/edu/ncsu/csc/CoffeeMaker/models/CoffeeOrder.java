@@ -7,6 +7,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Keeps track of a drink order in CoffeeMaker. An order will have an associated
+ * recipe, name, and status whether it is fulfilled and picked up
+ *
+ * @author tgpham
+ *
+ */
 @Entity
 public class CoffeeOrder extends DomainObject {
 
@@ -35,6 +42,14 @@ public class CoffeeOrder extends DomainObject {
 
     }
 
+    /**
+     * Constructs an order with a recipe and username
+     *
+     * @param recipe
+     *            recipe in the order
+     * @param username
+     *            username of the customer
+     */
     public CoffeeOrder ( final Recipe recipe, final String username ) {
         super();
         setRecipe( recipe );
@@ -43,6 +58,11 @@ public class CoffeeOrder extends DomainObject {
         setPickedUp( false );
     }
 
+    /**
+     * Gets id
+     *
+     * @return id of the order
+     */
     @Override
     public Long getId () {
         return id;

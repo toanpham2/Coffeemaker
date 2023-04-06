@@ -10,6 +10,7 @@ import com.google.gson.Gson;
  */
 public class TestUtils {
 
+    /** gson object */
     private static Gson gson = new Gson();
 
     /**

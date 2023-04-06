@@ -18,6 +18,12 @@ import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 import edu.ncsu.csc.CoffeeMaker.services.OrderService;
 
+/**
+ * Includes CRUD operations for Order
+ *
+ * @author tgpham
+ *
+ */
 @SuppressWarnings ( { "unchecked", "rawtypes" } )
 @RestController
 public class APIOrderController extends APIController {
@@ -71,8 +77,7 @@ public class APIOrderController extends APIController {
         System.out.println( "Deleting id " + id.toString() );
         final CoffeeOrder order = service.findById( id );
         if ( null == order ) {
-            return new ResponseEntity( errorResponse( "No order found for name " + order.getName() ),
-                    HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No order found" ), HttpStatus.NOT_FOUND );
         }
         service.delete( order );
 

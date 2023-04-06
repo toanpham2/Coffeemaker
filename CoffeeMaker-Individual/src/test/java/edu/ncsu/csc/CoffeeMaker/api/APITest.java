@@ -31,6 +31,14 @@ import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 
+/**
+ * Tests api calls
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @RunWith ( SpringRunner.class )
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -41,6 +49,7 @@ public class APITest {
      */
     private MockMvc               mvc;
 
+    /** web application context for testing */
     @Autowired
     private WebApplicationContext context;
 
@@ -59,6 +68,12 @@ public class APITest {
         mvc = MockMvcBuilders.webAppContextSetup( context ).build();
     }
 
+    /**
+     * Test getting, posting, updating recipe
+     *
+     * @throws Exception
+     *             if there is a problem with the API calls
+     */
     @Test
     @Transactional
     public void testRecipe () throws Exception {
@@ -112,10 +127,16 @@ public class APITest {
 
     }
 
+    /**
+     * Test updating the ingredients in inventory
+     *
+     * @throws Exception
+     *             if there is a problem with the API calls
+     */
     @Test
     @Transactional
     public void testUpdateIngredients () throws Exception {
-        final Inventory ivt = service.getInventory();
+        // final Inventory ivt = service.getInventory();
         final List<Ingredient> updateList = new ArrayList<Ingredient>();
         final Ingredient chocolate = new Ingredient( "Chocolate", 15 );
         updateList.add( chocolate );

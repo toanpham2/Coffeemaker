@@ -96,10 +96,11 @@ public class Inventory extends DomainObject {
         boolean isEnough = true;
         for ( int i = 0; i < ingredientsInv.size(); i++ ) {
             for ( int j = 0; j < r.ingredients.size(); j++ ) {
-                if ( ingredientsInv.get( i ).getType().equals( r.ingredients.get( j ).getType() ) ) {
-                    if ( ingredientsInv.get( i ).getAmount() < r.ingredients.get( j ).getAmount() ) {
-                        isEnough = false;
-                    }
+                if ( ( ingredientsInv.get( i ).getType().equals( r.ingredients.get( j ).getType() ) )
+                        && ( ingredientsInv.get( i ).getAmount() < r.ingredients.get( j ).getAmount() ) ) {
+
+                    isEnough = false;
+
                 }
             }
         }

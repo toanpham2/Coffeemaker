@@ -71,8 +71,7 @@ public class APIIngredientController extends APIController {
         System.out.println( "Deleting id " + id.toString() );
         final Ingredient ing = service.findById( id );
         if ( null == ing ) {
-            return new ResponseEntity( errorResponse( "No recipe found for name " + ing.getType() ),
-                    HttpStatus.NOT_FOUND );
+            return new ResponseEntity( errorResponse( "No recipe found for ingredient" ), HttpStatus.NOT_FOUND );
         }
         service.delete( ing );
 

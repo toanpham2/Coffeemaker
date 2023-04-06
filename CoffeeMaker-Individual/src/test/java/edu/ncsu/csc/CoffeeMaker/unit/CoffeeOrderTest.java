@@ -17,7 +17,6 @@ import edu.ncsu.csc.CoffeeMaker.models.CoffeeOrder;
 import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.models.User;
-import edu.ncsu.csc.CoffeeMaker.services.IngredientService;
 import edu.ncsu.csc.CoffeeMaker.services.OrderService;
 import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 import edu.ncsu.csc.CoffeeMaker.services.UserService;
@@ -29,26 +28,22 @@ import edu.ncsu.csc.CoffeeMaker.services.UserService;
  *
  *
  */
-
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
 @SpringBootTest ( classes = TestConfig.class )
-public class coffeeOrderTest {
+public class CoffeeOrderTest {
 
     /** user service for testing */
     @Autowired
-    private OrderService      service;
-
-    @Autowired
-    private IngredientService Ingservice;
+    private OrderService  service;
 
     /** user service for testing */
     @Autowired
-    private UserService       UserService;
+    private UserService   userService;
 
     /** user service for testing */
     @Autowired
-    private RecipeService     recipeService;
+    private RecipeService recipeService;
 
     /**
      * Sets up service by clearing any existing users
@@ -56,7 +51,7 @@ public class coffeeOrderTest {
     @BeforeEach
     public void setup () {
         service.deleteAll();
-        UserService.deleteAll();
+        userService.deleteAll();
         recipeService.deleteAll();
     }
 
@@ -72,19 +67,19 @@ public class coffeeOrderTest {
 
         final Recipe r1 = new Recipe();
         r1.setName( "Black Coffee" );
-        final Ingredient Coffee = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk = new Ingredient( "Milk", 0 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 0 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 0 );
-        r1.addIngredient( Coffee );
-        r1.addIngredient( Milk );
-        r1.addIngredient( Sugar );
-        r1.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 1 );
+        final Ingredient milk = new Ingredient( "Milk", 0 );
+        final Ingredient sugar = new Ingredient( "Sugar", 0 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 0 );
+        r1.addIngredient( coffee );
+        r1.addIngredient( milk );
+        r1.addIngredient( sugar );
+        r1.addIngredient( chocolate );
         r1.setPrice( 1 );
 
         final CoffeeOrder order1 = new CoffeeOrder( r1, user1.getUsername() );
 
-        UserService.save( user1 );
+        userService.save( user1 );
         recipeService.save( r1 );
         service.save( order1 );
         assertEquals( 1, service.count() );

@@ -31,6 +31,14 @@ import edu.ncsu.csc.CoffeeMaker.models.Ingredient;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.RecipeService;
 
+/**
+ * Tests APIRecipe controller
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @ExtendWith ( SpringExtension.class )
@@ -42,9 +50,11 @@ public class APIRecipeTest {
      */
     private MockMvc               mvc;
 
+    /** web application context for testing */
     @Autowired
     private WebApplicationContext context;
 
+    /** recipe service for testing */
     @Autowired
     private RecipeService         service;
 
@@ -58,6 +68,12 @@ public class APIRecipeTest {
         service.deleteAll();
     }
 
+    /**
+     * Makes surea recipe can be posted
+     *
+     * @throws Exception
+     *             if there is a problem posting
+     */
     @Test
     @Transactional
     public void ensureRecipe () throws Exception {
@@ -76,6 +92,12 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test posting a new recipe
+     *
+     * @throws Exception
+     *             if there is a problem posting
+     */
     @Test
     @Transactional
     public void testRecipeAPI () throws Exception {
@@ -98,6 +120,12 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test adding recipe with a duplicate name
+     *
+     * @throws Exception
+     *             if there is a problem in posting
+     */
     @Test
     @Transactional
     public void testAddRecipe2 () throws Exception {
@@ -117,6 +145,12 @@ public class APIRecipeTest {
         Assertions.assertEquals( 1, service.findAll().size(), "There should only one recipe in the CoffeeMaker" );
     }
 
+    /**
+     * Test adding more than 3 recipes when the limit is 3
+     *
+     * @throws Exception
+     *             if there is a problem posting
+     */
     @Test
     @Transactional
     public void testAddRecipe15 () throws Exception {
@@ -143,6 +177,14 @@ public class APIRecipeTest {
         Assertions.assertEquals( 3, service.count(), "Creating a fourth recipe should not get saved" );
     }
 
+    /**
+     * Test deleting a recipe
+     *
+     * @throws UnsupportedEncodingException
+     *             if there is an encoding exception
+     * @throws Exception
+     *             if there is a problem getting or posting
+     */
     @Test
     @Transactional
     public void testDeleteRecipe1 () throws UnsupportedEncodingException, Exception {
@@ -167,6 +209,14 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test deleting multiple recipes
+     *
+     * @throws UnsupportedEncodingException
+     *             if there is an encoding issue
+     * @throws Exception
+     *             if there is a problem getting or deleting
+     */
     @Test
     @Transactional
     public void testDeleteRecipe2 () throws UnsupportedEncodingException, Exception {
@@ -209,6 +259,14 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test deleting recipes not found
+     *
+     * @throws UnsupportedEncodingException
+     *             if there is an encoding issue
+     * @throws Exception
+     *             if there is a problem with the API calls
+     */
     @Test
     @Transactional
     public void testDeleteRecipe3 () throws UnsupportedEncodingException, Exception {
@@ -247,6 +305,14 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test deleting recipe
+     *
+     * @throws UnsupportedEncodingException
+     *             if there is an encoding issue
+     * @throws Exception
+     *             if there is a problem while making API calls
+     */
     @Test
     @Transactional
     public void testDeleteRecipe4 () throws UnsupportedEncodingException, Exception {
@@ -272,6 +338,12 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Test updating a recipe
+     *
+     * @throws Exception
+     *             if there is a problem with API calls
+     */
     @Test
     @Transactional
     public void testEditRecipe () throws Exception {
@@ -305,6 +377,23 @@ public class APIRecipeTest {
 
     }
 
+    /**
+     * Helper method to create a recipe
+     *
+     * @param name
+     *            name of recipe
+     * @param price
+     *            price of the recipe
+     * @param coffee
+     *            amount of coffee
+     * @param milk
+     *            amount of milk
+     * @param sugar
+     *            amount of sugar
+     * @param chocolate
+     *            amount of chocolate
+     * @return the created recipe
+     */
     private Recipe createRecipe ( final String name, final Integer price, final Integer coffee, final Integer milk,
             final Integer sugar, final Integer chocolate ) {
         final Recipe recipe = new Recipe();

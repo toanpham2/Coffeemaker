@@ -18,28 +18,43 @@ import edu.ncsu.csc.CoffeeMaker.models.Inventory;
 import edu.ncsu.csc.CoffeeMaker.models.Recipe;
 import edu.ncsu.csc.CoffeeMaker.services.InventoryService;
 
+/**
+ * Tests the Inventory and its functionalities
+ *
+ * @author tgpham
+ * @author jncoppet
+ * @author mpwarren
+ *
+ */
 @ExtendWith ( SpringExtension.class )
 @EnableAutoConfiguration
 @SpringBootTest ( classes = TestConfig.class )
 public class InventoryTest {
 
+    /** inventory service used for testing */
     @Autowired
     private InventoryService inventoryService;
 
+    /**
+     * Sets up the inventory service before testing
+     */
     @BeforeEach
     public void setup () {
         final Inventory ivt = inventoryService.getInventory();
-        final Ingredient Coffee = new Ingredient( "Coffee", 500 );
-        final Ingredient Milk = new Ingredient( "Milk", 500 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 500 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 500 );
-        ivt.addIngredients( Coffee );
-        ivt.addIngredients( Milk );
-        ivt.addIngredients( Sugar );
-        ivt.addIngredients( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 500 );
+        final Ingredient milk = new Ingredient( "Milk", 500 );
+        final Ingredient sugar = new Ingredient( "Sugar", 500 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 500 );
+        ivt.addIngredients( coffee );
+        ivt.addIngredients( milk );
+        ivt.addIngredients( sugar );
+        ivt.addIngredients( chocolate );
         inventoryService.save( ivt );
     }
 
+    /**
+     * Test using ingredients from the inventory
+     */
     @Test
     @Transactional
     public void testConsumeInventory () {
@@ -48,14 +63,14 @@ public class InventoryTest {
         final Recipe recipe = new Recipe();
         recipe.setName( "Mocha" );
         recipe.setPrice( 5 );
-        final Ingredient Coffee2 = new Ingredient( "Coffee", 1 );
-        final Ingredient Milk2 = new Ingredient( "Milk", 20 );
-        final Ingredient Sugar2 = new Ingredient( "Sugar", 5 );
-        final Ingredient Chocolate2 = new Ingredient( "Chocolate", 10 );
-        recipe.addIngredient( Coffee2 );
-        recipe.addIngredient( Milk2 );
-        recipe.addIngredient( Sugar2 );
-        recipe.addIngredient( Chocolate2 );
+        final Ingredient coffee2 = new Ingredient( "Coffee", 1 );
+        final Ingredient milk2 = new Ingredient( "Milk", 20 );
+        final Ingredient sugar2 = new Ingredient( "Sugar", 5 );
+        final Ingredient chocolate2 = new Ingredient( "Chocolate", 10 );
+        recipe.addIngredient( coffee2 );
+        recipe.addIngredient( milk2 );
+        recipe.addIngredient( sugar2 );
+        recipe.addIngredient( chocolate2 );
         i.useIngredients( recipe );
 
         /*
@@ -68,19 +83,22 @@ public class InventoryTest {
         Assertions.assertEquals( 499, (int) i.getOneIngredient( "Coffee" ).getAmount() );
     }
 
+    /**
+     * Test updating the inventory
+     */
     @Test
     @Transactional
     public void testUpdateInventory1 () {
         Inventory ivt = inventoryService.getInventory();
 
-        final Ingredient Coffee1 = new Ingredient( "Coffee", 5 );
-        final Ingredient Milk1 = new Ingredient( "Milk", 3 );
-        final Ingredient Sugar1 = new Ingredient( "Sugar", 7 );
-        final Ingredient Chocolate1 = new Ingredient( "Chocolate", 2 );
-        ivt.updateIngredients( Coffee1 );
-        ivt.updateIngredients( Milk1 );
-        ivt.updateIngredients( Sugar1 );
-        ivt.updateIngredients( Chocolate1 );
+        final Ingredient coffee1 = new Ingredient( "Coffee", 5 );
+        final Ingredient milk1 = new Ingredient( "Milk", 3 );
+        final Ingredient sugar1 = new Ingredient( "Sugar", 7 );
+        final Ingredient chocolate1 = new Ingredient( "Chocolate", 2 );
+        ivt.updateIngredients( coffee1 );
+        ivt.updateIngredients( milk1 );
+        ivt.updateIngredients( sugar1 );
+        ivt.updateIngredients( chocolate1 );
 
         /* Save and retrieve again to update with DB */
         inventoryService.save( ivt );
@@ -98,6 +116,9 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Test adding inventory with invalid coffee amount
+     */
     @Test
     @Transactional
     public void testAddInventory2 () {
@@ -105,14 +126,14 @@ public class InventoryTest {
 
         try {
             // ivt.addIngredients( -5, 3, 7, 2 );
-            final Ingredient Coffee1 = new Ingredient( "Coffee", -5 );
-            final Ingredient Milk1 = new Ingredient( "Milk", 3 );
-            final Ingredient Sugar1 = new Ingredient( "Sugar", 7 );
-            final Ingredient Chocolate1 = new Ingredient( "Chocolate", 2 );
-            ivt.addIngredients( Coffee1 );
-            ivt.addIngredients( Milk1 );
-            ivt.addIngredients( Sugar1 );
-            ivt.addIngredients( Chocolate1 );
+            final Ingredient coffee1 = new Ingredient( "Coffee", -5 );
+            final Ingredient milk1 = new Ingredient( "Milk", 3 );
+            final Ingredient sugar1 = new Ingredient( "Sugar", 7 );
+            final Ingredient chocolate1 = new Ingredient( "Chocolate", 2 );
+            ivt.addIngredients( coffee1 );
+            ivt.addIngredients( milk1 );
+            ivt.addIngredients( sugar1 );
+            ivt.addIngredients( chocolate1 );
         }
         catch ( final IllegalArgumentException iae ) {
             Assertions.assertEquals( 500, (int) ivt.getOneIngredient( "Coffee" ).getAmount(),
@@ -126,6 +147,9 @@ public class InventoryTest {
         }
     }
 
+    /**
+     * Test adding inventory with invalid milk amount
+     */
     @Test
     @Transactional
     public void testAddInventory3 () {
@@ -133,14 +157,14 @@ public class InventoryTest {
 
         try {
             // ivt.addIngredients( 5, -3, 7, 2 );
-            final Ingredient Coffee1 = new Ingredient( "Coffee", 5 );
-            final Ingredient Milk1 = new Ingredient( "Milk", -3 );
-            final Ingredient Sugar1 = new Ingredient( "Sugar", 7 );
-            final Ingredient Chocolate1 = new Ingredient( "Chocolate", 2 );
-            ivt.addIngredients( Coffee1 );
-            ivt.addIngredients( Milk1 );
-            ivt.addIngredients( Sugar1 );
-            ivt.addIngredients( Chocolate1 );
+            final Ingredient coffee1 = new Ingredient( "Coffee", 5 );
+            final Ingredient milk1 = new Ingredient( "Milk", -3 );
+            final Ingredient sugar1 = new Ingredient( "Sugar", 7 );
+            final Ingredient chocolate1 = new Ingredient( "Chocolate", 2 );
+            ivt.addIngredients( coffee1 );
+            ivt.addIngredients( milk1 );
+            ivt.addIngredients( sugar1 );
+            ivt.addIngredients( chocolate1 );
         }
         catch ( final IllegalArgumentException iae ) {
             Assertions.assertEquals( 500, (int) ivt.getOneIngredient( "Coffee" ).getAmount(),
@@ -156,20 +180,23 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Test updating inventory with invalid sugar amount
+     */
     @Test
     @Transactional
     public void testAddInventory4 () {
         final Inventory ivt = inventoryService.getInventory();
 
         try {
-            final Ingredient Coffee1 = new Ingredient( "Coffee", 5 );
-            final Ingredient Milk1 = new Ingredient( "Milk", 3 );
-            final Ingredient Sugar1 = new Ingredient( "Sugar", -7 );
-            final Ingredient Chocolate1 = new Ingredient( "Chocolate", 2 );
-            ivt.addIngredients( Coffee1 );
-            ivt.addIngredients( Milk1 );
-            ivt.addIngredients( Sugar1 );
-            ivt.addIngredients( Chocolate1 );
+            final Ingredient coffee1 = new Ingredient( "Coffee", 5 );
+            final Ingredient milk1 = new Ingredient( "Milk", 3 );
+            final Ingredient sugar1 = new Ingredient( "Sugar", -7 );
+            final Ingredient chocolate1 = new Ingredient( "Chocolate", 2 );
+            ivt.addIngredients( coffee1 );
+            ivt.addIngredients( milk1 );
+            ivt.addIngredients( sugar1 );
+            ivt.addIngredients( chocolate1 );
         }
         catch ( final IllegalArgumentException iae ) {
             Assertions.assertEquals( 500, (int) ivt.getOneIngredient( "Coffee" ).getAmount(),
@@ -185,20 +212,23 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Test adding inventory with invalid milk amount
+     */
     @Test
     @Transactional
     public void testAddInventory5 () {
         final Inventory ivt = inventoryService.getInventory();
 
         try {
-            final Ingredient Coffee1 = new Ingredient( "Coffee", 5 );
-            final Ingredient Milk1 = new Ingredient( "Milk", -3 );
-            final Ingredient Sugar1 = new Ingredient( "Sugar", 7 );
-            final Ingredient Chocolate1 = new Ingredient( "Chocolate", -2 );
-            ivt.addIngredients( Coffee1 );
-            ivt.addIngredients( Milk1 );
-            ivt.addIngredients( Sugar1 );
-            ivt.addIngredients( Chocolate1 );
+            final Ingredient coffee1 = new Ingredient( "Coffee", 5 );
+            final Ingredient milk1 = new Ingredient( "Milk", -3 );
+            final Ingredient sugar1 = new Ingredient( "Sugar", 7 );
+            final Ingredient chocolate1 = new Ingredient( "Chocolate", -2 );
+            ivt.addIngredients( coffee1 );
+            ivt.addIngredients( milk1 );
+            ivt.addIngredients( sugar1 );
+            ivt.addIngredients( chocolate1 );
         }
         catch ( final IllegalArgumentException iae ) {
             Assertions.assertEquals( 500, (int) ivt.getOneIngredient( "Coffee" ).getAmount(),
@@ -214,6 +244,9 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Test setting id for inventory
+     */
     @Test
     @Transactional
     public void testSetID () {
@@ -227,6 +260,9 @@ public class InventoryTest {
         assertEquals( 9, ivt.getId() );
     }
 
+    /**
+     * Test checking the ingredients for sugar
+     */
     @Test
     @Transactional
     public void testCheckIngredients () {
@@ -245,6 +281,9 @@ public class InventoryTest {
 
     }
 
+    /**
+     * Test toString method in inventory
+     */
     @Test
     @Transactional
     public void testToString () {
@@ -259,20 +298,23 @@ public class InventoryTest {
                 i.toString() );
     }
 
+    /**
+     * Test using ingredients when there is not enough inventory
+     */
     @Test
     @Transactional
     public void testNotEnoughIngredents () {
         final Inventory i = inventoryService.getInventory();
 
         final Recipe recipe = new Recipe();
-        final Ingredient Coffee = new Ingredient( "Coffee", 501 );
-        final Ingredient Milk = new Ingredient( "Milk", 1 );
-        final Ingredient Sugar = new Ingredient( "Sugar", 1 );
-        final Ingredient Chocolate = new Ingredient( "Chocolate", 1 );
-        recipe.addIngredient( Coffee );
-        recipe.addIngredient( Milk );
-        recipe.addIngredient( Sugar );
-        recipe.addIngredient( Chocolate );
+        final Ingredient coffee = new Ingredient( "Coffee", 501 );
+        final Ingredient milk = new Ingredient( "Milk", 1 );
+        final Ingredient sugar = new Ingredient( "Sugar", 1 );
+        final Ingredient chocolate = new Ingredient( "Chocolate", 1 );
+        recipe.addIngredient( coffee );
+        recipe.addIngredient( milk );
+        recipe.addIngredient( sugar );
+        recipe.addIngredient( chocolate );
         recipe.setPrice( 12 );
 
         Assertions.assertFalse( i.useIngredients( recipe ) );
