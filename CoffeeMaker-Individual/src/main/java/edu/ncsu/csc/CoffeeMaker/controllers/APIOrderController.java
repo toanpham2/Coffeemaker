@@ -109,7 +109,7 @@ public class APIOrderController extends APIController {
      * @return Response Entity
      */
     @PutMapping ( BASE_PATH + "/orders" )
-    public ResponseEntity updateOrdersFulfilled ( @RequestBody final CoffeeOrder order ) {
+    public ResponseEntity updateOrdersStatus ( @RequestBody final CoffeeOrder order ) {
         final CoffeeOrder o = service.findByName( order.getName() );
         final Inventory inventory = inventoryService.getInventory();
         if ( null == o ) {
@@ -123,30 +123,10 @@ public class APIOrderController extends APIController {
             }
 
         }
-        o.setFulfilled( true );
+        o.setFulfilled( order.isFulfilled );
+        o.setPickedUp( order.isPickedUp );
         service.save( o );
         return new ResponseEntity( successResponse( order.getName() + " was successfully updated to fulfilled" ),
-                HttpStatus.OK );
-    }
-
-    /**
-     * PUT - updates an order's isPickedUp field to true
-     *
-     * @param order
-     *            the order to edit
-     * @return Response Entity
-     */
-    @PutMapping ( BASE_PATH + "/ordersPickedUp" )
-    public ResponseEntity updateOrdersPickedUp ( @RequestBody final CoffeeOrder order ) {
-        final CoffeeOrder o = service.findByName( order.getName() );
-        if ( null == o ) {
-            return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
-                    HttpStatus.NOT_FOUND );
-        }
-
-        o.setPickedUp( true );
-        service.save( o );
-        return new ResponseEntity( successResponse( order.getName() + " was successfully updated to picked up" ),
                 HttpStatus.OK );
     }
 
