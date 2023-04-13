@@ -49,7 +49,7 @@
 		/*<![CDATA[*/
 		var app = angular.module('myApp', []);
 		app.controller('homeController', function($scope, $http, $q) {
-			
+			$scope.validPayment = false;
 			$scope.payment = 0;
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
@@ -66,10 +66,12 @@
 				$scope.invalidPrice = false;
 				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
 					console.log(response);
+					$scope.currentOrderRecipe = response.data.recipe;
 					$scope.currentOrderName = response.data.recipe.name;
 					$scope.currentOrderPrice = response.data.recipe.price;
 					if(response.data.isFulfilled) {
 						$scope.currentOrderStatus = "Fulfilled";
+						$scope.orderFulfilled = true;
 					} else {
 						$scope.currentOrderStatus = "In Progress";
 					}
@@ -80,6 +82,19 @@
 			
 			$scope.refresh()
 			
+			$scope.pickup = function() {
+				$scope.orderObject = {
+					recipe: $scope.currentOrderRecipe,
+					name: $scope.currentUser,
+				}
+				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+					console.log(response);
+				}, function(rejection) {
+					console.error(rejection);
+				})
+				console.log($scope.orderObject);
+			}
+			
 			$scope.placeOrder = function(param) {
 				for (let k = 0; k <  $scope.recipes.length; k++){
 					if($scope.recipes[k].name == param){
@@ -88,15 +103,17 @@
 				}
 				
 				if($scope.orderRecipe.price  <= $scope.payment) {
+					$scope.validPayment = true;
 					$scope.orderObject = {
 							recipe: $scope.orderRecipe,
 							name: $scope.currentUser,
 					}
 					
-					//if($scope.currentOrderStatus == "Fulfilled") {
-						
-					//} else 
-						
+					$scope.change = parseInt($scope.payment) - parseInt($scope.orderRecipe.price);
+					console.log($scope.payment);
+					console.log($scope.orderRecipe.price);
+					console.log($scope.change);		
+					
 					if ($scope.currentOrderStatus != "N/A") {
 						$scope.multipleOrderError = true;
 					} else {
@@ -151,13 +168,14 @@
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click = "refresh()" >Refresh</button>
+			<button class="btn" type="button" ng-show = "orderFulfilled" ng-click = "pickup()" >Pick-Up</button>
 		</div>
 		
 		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
 		
 		<div id="centered">
 			<ul>
-				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
+				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}: ${{recipe.price}}
 						<input type="radio" ng-model="$parent.name" name="name"
 						value="{{recipe.name}}" required="true" />
 				</label></li>
@@ -186,6 +204,7 @@
 		
 		<div>
 			<label ng-show=invalidPrice>Error: Invalid price.</label>
+			<label id="centered" ng-show=validPayment>Your change is ${{change}}.</label>
 		</div>
 		
 		<div id="centered">

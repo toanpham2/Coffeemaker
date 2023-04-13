@@ -169,4 +169,16 @@ public class MappingController {
         return "fulfillorder";
     }
 
+    /**
+     * maps to the page for staff to view order history
+     *
+     * @param model
+     *            underlying UI model
+     * @return contents of the page
+     */
+    @GetMapping ( { "/orderhistory", "/orderhistory.html" } )
+    public String orderHistory ( final Model model ) {
+        return "orderhistory";
+    }
+
 }

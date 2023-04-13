@@ -1,0 +1,116 @@
+<head>
+
+<title>Order History</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+	.line1{
+		position: relative;
+		padding: 10px;	
+		
+	}
+	
+	#centered{
+		display: flex;
+		justify-content: center;
+		padding: 10px;
+	}
+	
+	.line{
+		padding-bottom: 20px;
+	}
+	
+	.btn{
+		width: 200px;
+	}
+	
+	#inputLabel {
+		font-size: 30px; 	
+	}
+	
+	th, td {
+		padding: 17px 70px;
+		border: 1px solid;
+	}
+	
+	table {
+  		border-collapse: collapse;
+	}
+	
+		
+</style>
+
+</head>
+
+<body>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	
+	<script>
+		/*<![CDATA[*/
+		var app = angular.module('myApp', []);
+		app.controller('vieworderhistoryController', function($scope, $http, $q) {
+			
+			$scope.refresh = function() {
+				$http.get("/api/v1/orders").then(function(response) {
+					$scope.temp = response.data;
+					$scope.orders = [];
+					$scope.totalRevenue = 0;
+					for (let k = 0; k <  $scope.temp.length; k++){
+						if($scope.temp[k].isFulfilled && $scope.temp[k].isPickedUp){
+							$scope.orders.push($scope.temp[k]);
+							$scope.totalRevenue += $scope.temp[k].recipe.price;
+							console.log($scope.totalRevenue);
+						}
+					}
+					console.log($scope.orders);
+				});
+			}
+			
+			
+			$scope.refresh()
+			
+			$scope.home = function(){
+				window.location.href = "/staffhome.html"
+			}
+			
+		})
+			
+			
+		/*]]>*/
+	</script>
+	
+	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="vieworderhistoryController">
+
+		<h1 style="text-align: center; font-size: 30px;">Order History</h1>
+		
+		<table id="centered">
+		
+		
+			<br /> 
+		
+			<tr>
+				<th>Customer</th>
+				<th>Order</th>
+				<th>Price</th>
+			</tr>
+			
+			
+			<tr ng-repeat="order in orders">
+						<td><label>{{order.name}}</label></th>
+						<td><label>{{order.recipe.name}}</label></th>
+						<td><label>{{order.recipe.price}}</label></th>						
+			</tr>
+		
+		</table>
+		
+		<label id="centered">Total Revenue: {{totalRevenue}}</label>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click=home() >Home</button>
+		</div>
+		
+		
+
+	</div>
+
+</body>
