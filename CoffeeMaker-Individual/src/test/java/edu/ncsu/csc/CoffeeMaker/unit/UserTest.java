@@ -51,7 +51,7 @@ public class UserTest {
     public void testCustomerValid () {
         assertEquals( 0, service.findAll().size(), "There should be no Users in the CoffeeMaker" );
 
-        final User user1 = new User( "username123", "pass123", "n/a", false );
+        final User user1 = new User( "username123", "pass123", "n/a", false, false );
 
         assertFalse( user1.getIsStaff() );
         assertEquals( "username123", user1.getUsername() );
@@ -67,12 +67,12 @@ public class UserTest {
     @Test
     @Transactional
     public void testStaffValid () {
-        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece", true );
+        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece", true, false );
 
         assertTrue( user2.getIsStaff() );
         assertEquals( "staffuser4", user2.getUsername() );
 
-        final User user1 = new User( "username123", "pass123", "n/a", false );
+        final User user1 = new User( "username123", "pass123", "n/a", false, false );
         service.save( user1 );
         service.save( user2 );
         assertEquals( 2, service.count() );
@@ -85,8 +85,8 @@ public class UserTest {
     @Test
     @Transactional
     public void testUserToString () {
-        final User staff = new User( "staffname", "staffpass!", "OnePiece", true );
-        final User customer = new User( "CustomerName", "1234!#", "n/a", false );
+        final User staff = new User( "staffname", "staffpass!", "OnePiece", true, false );
+        final User customer = new User( "CustomerName", "1234!#", "n/a", false, false );
 
         final String staffString = staff.toString();
         final String customerString = customer.toString();

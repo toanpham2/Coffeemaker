@@ -113,11 +113,12 @@ public class APICoffeeOrderTest {
         r1.addIngredient( chocolate );
         r1.setPrice( 1 );
 
-        final User user1 = new User( "username123", "pass123", "n/a", false );
-        final User user2 = new User( "username222", "pass222", "n/a", false );
-
+        final User user1 = new User( "username123", "pass123", "n/a", false, false );
+        final User user2 = new User( "username222", "pass222", "n/a", false, false );
+        final User user3 = new User( "username333", "pass222", "n/a", false, false );
         final CoffeeOrder order1 = new CoffeeOrder( r1, user1.getUsername() );
         final CoffeeOrder order2 = new CoffeeOrder( r1, user2.getUsername() );
+        final CoffeeOrder order3 = new CoffeeOrder( r1, user3.getUsername() );
         final List<Ingredient> ingList = new ArrayList<Ingredient>();
         ingList.add( chocolate );
         ingList.add( coffee );
@@ -151,6 +152,7 @@ public class APICoffeeOrderTest {
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isConflict() ).andReturn()
                 .getResponse().getContentAsString();
+
         mvc.perform( get( "/api/v1/orders" ) ).andDo( print() ).andExpect( status().isOk() ).andReturn().getResponse()
                 .getContentAsString();
         mvc.perform( get( "/api/v1/orders/username133" ) ).andDo( print() ).andExpect( status().isNotFound() )
@@ -163,7 +165,7 @@ public class APICoffeeOrderTest {
         // service
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) );
-
+        order1.setFulfilled( true );
         mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
 
@@ -171,13 +173,17 @@ public class APICoffeeOrderTest {
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
         assertTrue( fulfilledOrder.contains( "\"isFulfilled\":true,\"isPickedUp\":false" ) );
-
-        mvc.perform( put( "/api/v1/ordersPickedUp" ).contentType( MediaType.APPLICATION_JSON )
+        order1.setPickedUp( true );
+        mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
 
-        final String pickedupOrder = mvc.perform( get( "/api/v1/orders" ) ).andDo( print() )
+        final String pickedupOrder = mvc.perform( get( "/api/v1/orders/username123" ) ).andDo( print() )
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
         assertTrue( pickedupOrder.contains( "\"isFulfilled\":true,\"isPickedUp\":true" ) );
+
+        mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( order3 ) ) ).andExpect( status().isNotFound() );
+
     }
 }

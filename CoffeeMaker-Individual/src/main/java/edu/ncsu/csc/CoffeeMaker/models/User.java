@@ -37,6 +37,9 @@ public class User extends DomainObject {
     /** code for if a user is a staff member */
     private static final String STAFF_CODE = "OnePiece";
 
+    /** whether a user is anonymous or not */
+    private boolean             isAnon;
+
     /**
      * empty constructor
      */
@@ -56,8 +59,8 @@ public class User extends DomainObject {
      * @param isStaff
      *            true if user is staff, false otherwise
      */
-    public User ( final String username, final String password, final String submittedStaffCode,
-            final boolean isStaff ) {
+    public User ( final String username, final String password, final String submittedStaffCode, final boolean isStaff,
+            final boolean isAnon ) {
         this.username = username;
         this.password = password;
         this.isStaff = isStaff;
@@ -65,6 +68,7 @@ public class User extends DomainObject {
         if ( isStaff && !submittedStaffCode.equals( STAFF_CODE ) ) {
             throw new IllegalArgumentException( "Staff code is incorrect" );
         }
+        this.isAnon = isAnon;
     }
 
     /**
@@ -148,6 +152,26 @@ public class User extends DomainObject {
     @Override
     public Serializable getId () {
         return id;
+    }
+
+    /**
+     * Gets staff the isAnon status of user
+     *
+     * @return true if isAnon is true, false otherwise
+     */
+    public boolean getIsAnon () {
+        return isAnon;
+    }
+
+    /**
+     * sets the is anon of user
+     *
+     * @param boolean
+     *            status to set
+     *
+     */
+    public void setIsAnon ( final boolean status ) {
+        this.isAnon = status;
     }
 
     /**
