@@ -41,7 +41,7 @@
 		var app = angular.module('myApp', []);
 		app.controller('createaccountController', function($scope, $http, $q) {
 			
-
+			$scope.invalidPassword = false;
 			
 			$scope.reset = function(){
 				$scope.enteredUsername = "";
@@ -51,20 +51,26 @@
 			
 			
 			$scope.createAccount = function(isStaff){
-				$scope.user = {
-						"username": $scope.enteredUsername,
-						"password": $scope.enteredPassword,
-						"submittedStaffCode": $scope.enteredStaffCode,
-						"isStaff": isStaff
-					}
-					
-					$http.post("api/v1/users", $scope.user).then(function(response) {
-						$scope.response = response
-						$scope.reset()
-					}, function(rejection){
-						$scope.response = rejection
-						$scope.enteredStaffCode = "";
-					})
+				if($scope.enteredPassword.length < 8) {
+					$scope.invalidPassword = true;
+				} else {
+					$scope.invalidPassword = false;
+					$scope.user = {
+							"username": $scope.enteredUsername,
+							"password": $scope.enteredPassword,
+							"submittedStaffCode": $scope.enteredStaffCode,
+							"isStaff": isStaff
+						}
+						
+							
+						$http.post("api/v1/users", $scope.user).then(function(response) {
+							$scope.response = response
+							$scope.reset()
+						}, function(rejection){
+							$scope.response = rejection
+							$scope.enteredStaffCode = "";
+						})
+				}
 			}
 			
 				
@@ -78,7 +84,7 @@
 	
 	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="createaccountController">
 
-		<h1 style="text-align: center; font-size: 75px;">Coffee Maker</h1>
+		<h1 style="text-align: center; font-size: 75px;">Create Account</h1>
 		
 		<div id="centered">
 			<label for="username" id="inputLabel">Username: </label>
@@ -109,6 +115,10 @@
 		
 		<div id="centered">
 			<p>	{{response.data.message}}  </p>
+		</div>
+		
+		<div id="cenetered">
+			<label ng-show=invalidPassword>Invalid password: Password must contain at least 8 characters.</label>
 		</div>
 
 	</div>
