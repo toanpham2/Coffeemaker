@@ -48,8 +48,14 @@
 			}
 			
 			
+			$scope.placeAnonymousOrder = function(){
+				localStorage.setItem("isAnon", true)
+				window.location.href = "/customerhome.html"
+			}
+			
 			$scope.login = function() {
 				localStorage.setItem('username', $scope.enteredUsername);
+				localStorage.setItem('isAnon', false)
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
 					if(response.data.password == $scope.enteredPassword){
 						if(response.data.isStaff){
@@ -98,6 +104,10 @@
 		
 		<div id="centered">
 			<a href="createaccount.html"><button>Create Account</button></a>
+		</div>
+		
+		<div id="centered">
+			<button ng-click="placeAnonymousOrder()">Place Anonymous Order</button>
 		</div>
 		
 		

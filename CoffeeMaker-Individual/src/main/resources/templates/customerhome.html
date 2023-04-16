@@ -50,6 +50,35 @@
 		var app = angular.module('myApp', []);
 		app.controller('homeController', function($scope, $http, $q) {
 			
+			console.log("JS")
+
+			
+			$scope.generateRandomUsername = function(){
+				adj = ["Beautiful", "Mysterious", "Energetic", "Serene", "Enchanting", "Courageous", "Intriguing", "Vibrant", "Majestic", "Radiant"]
+
+				colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Black", "White", "Gray"]
+
+				animals = ["Lion", "Elephant", "Dolphin", "Penguin", "Kangaroo", "Tiger", "Giraffe", "Crocodile", "Koala", "Penguin"]
+
+				randomElement = adj[Math.floor(Math.random() * 10)] + colors[Math.floor(Math.random() * 10)] + animals[Math.floor(Math.random() * 10)];
+
+				return randomElement
+			}
+			
+			$scope.generatePassword = function(){
+				return "guestpassword" + Math.floor(Math.random() * 100); 
+			}
+			
+			$scope.sendAnonUser = function(anonUser){
+				$http.post("api/v1/users", anonUser).then(function(response) {
+					alert("Your temprary Username: " + $scope.anonUser.username + " | Password: " + $scope.anonUser.password)
+				}, function(rejection){
+					anonUser.username = generateRandomUsername()
+					$scope.sendAnonUser()
+				})
+			}
+			
+			$scope.validPayment = false;
 			$scope.payment = 0;
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
@@ -59,17 +88,38 @@
 			$scope.currentOrderPrice = "N/A";
 			$scope.currentOrderStatus = "N/A";
 			
-			$scope.currentUser = localStorage.getItem('username');
+			$scope.isAnon = localStorage.getItem('isAnon');
+			if($scope.isAnon === "true"){
+				console.log("ANON")
+				$scope.anonPassword = $scope.generatePassword()
+				$scope.anonUser = {
+						"username": $scope.generateRandomUsername(),
+						"password": $scope.anonPassword,
+						"isAnon": true,
+						"submittedStaffCode": "",
+						"isStaff": false
+				} 
+				$scope.sendAnonUser($scope.anonUser)
+				$scope.currentUser = $scope.anonUser.username
+			}
+			else{
+				$scope.currentUser = localStorage.getItem('username');
+			}
+
+			
+
 			
 			$scope.refresh = function() {
 				$scope.multipleOrderError = false;
 				$scope.invalidPrice = false;
 				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
 					console.log(response);
+					$scope.currentOrderRecipe = response.data.recipe;
 					$scope.currentOrderName = response.data.recipe.name;
 					$scope.currentOrderPrice = response.data.recipe.price;
 					if(response.data.isFulfilled) {
 						$scope.currentOrderStatus = "Fulfilled";
+						$scope.orderFulfilled = true;
 					} else {
 						$scope.currentOrderStatus = "In Progress";
 					}
@@ -80,6 +130,19 @@
 			
 			$scope.refresh()
 			
+			$scope.pickup = function() {
+				$scope.orderObject = {
+					recipe: $scope.currentOrderRecipe,
+					name: $scope.currentUser,
+				}
+				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+					console.log(response);
+				}, function(rejection) {
+					console.error(rejection);
+				})
+				console.log($scope.orderObject);
+			}
+			
 			$scope.placeOrder = function(param) {
 				for (let k = 0; k <  $scope.recipes.length; k++){
 					if($scope.recipes[k].name == param){
@@ -88,15 +151,17 @@
 				}
 				
 				if($scope.orderRecipe.price  <= $scope.payment) {
+					$scope.validPayment = true;
 					$scope.orderObject = {
 							recipe: $scope.orderRecipe,
 							name: $scope.currentUser,
 					}
 					
-					//if($scope.currentOrderStatus == "Fulfilled") {
-						
-					//} else 
-						
+					$scope.change = parseInt($scope.payment) - parseInt($scope.orderRecipe.price);
+					console.log($scope.payment);
+					console.log($scope.orderRecipe.price);
+					console.log($scope.change);		
+					
 					if ($scope.currentOrderStatus != "N/A") {
 						$scope.multipleOrderError = true;
 					} else {
@@ -125,7 +190,7 @@
 	
 	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="homeController">
 
-		<h1 style="text-align: center; font-size: 30px;">Current Order</h1>
+		<h1 style="text-align: center; font-size: 30px;">Current Order For {{currentUser}}</h1>
 		
 		<table id="centered">
 		
@@ -151,13 +216,14 @@
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click = "refresh()" >Refresh</button>
+			<button class="btn" type="button" ng-show = "orderFulfilled" ng-click = "pickup()" >Pick-Up</button>
 		</div>
 		
 		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
 		
 		<div id="centered">
 			<ul>
-				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
+				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}: ${{recipe.price}}
 						<input type="radio" ng-model="$parent.name" name="name"
 						value="{{recipe.name}}" required="true" />
 				</label></li>
@@ -186,6 +252,7 @@
 		
 		<div>
 			<label ng-show=invalidPrice>Error: Invalid price.</label>
+			<label id="centered" ng-show=validPayment>Your change is ${{change}}.</label>
 		</div>
 		
 		<div id="centered">
