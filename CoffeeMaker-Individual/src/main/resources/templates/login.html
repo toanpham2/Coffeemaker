@@ -47,54 +47,15 @@
 				$scope.errorMessage = "";
 			}
 			
-			$scope.generateRandomUsername = function(){
-				adj = ["Beautiful", "Mysterious", "Energetic", "Serene", "Enchanting", "Courageous", "Intriguing", "Vibrant", "Majestic", "Radiant"]
-
-				colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Black", "White", "Gray"]
-
-				animals = ["Lion", "Elephant", "Dolphin", "Penguin", "Kangaroo", "Tiger", "Giraffe", "Crocodile", "Koala", "Penguin"]
-
-				randomElement = adj[Math.floor(Math.random() * 10)] + colors[Math.floor(Math.random() * 10)] + animals[Math.floor(Math.random() * 10)];
-
-				return randomElement
-			}
-			
-			$scope.generatePassword = function(){
-				return "guestpassword" + Math.floor(Math.random() * 100); 
-			}
 			
 			$scope.placeAnonymousOrder = function(){
-				$scope.user = {
-					"username": $scope.generateRandomUsername(),
-					"password": $scope.generatePassword(),
-					"isAnon": true,
-					"submittedStaffCode": "",
-					"isStaff": false
-				} 
-				
-				$scope.usernameFound = true
-				while($scope.usernameFound){
-					$http.get("api/v1/users/" + $scope.user.username).then(function(response){
-						$scope.usernameFound = false
-					}, function(rejection){
-						$scope.user.username = $scope.generateRandomUsername()
-					})
-				}
-
-				
-				$http.post("api/v1/users", $scope.user).then(function(response) {
-					$scope.response = response
-					$scope.reset()
-				}, function(rejection){
-					$scope.response = rejection
-					$scope.enteredStaffCode = "";
-				})
-				
-				alert("Your temprary Username: " + $scope.user.username + " | Password: " + $scope.user.password)
+				localStorage.setItem("isAnon", true)
+				window.location.href = "/customerhome.html"
 			}
 			
 			$scope.login = function() {
 				localStorage.setItem('username', $scope.enteredUsername);
+				localStorage.setItem('isAnon', false)
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
 					if(response.data.password == $scope.enteredPassword){
 						if(response.data.isStaff){
@@ -146,7 +107,7 @@
 		</div>
 		
 		<div id="centered">
-			<a href="customerhome.html"><button>Place Anonymous Order</button></a>
+			<button ng-click="placeAnonymousOrder()">Place Anonymous Order</button>
 		</div>
 		
 		
