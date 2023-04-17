@@ -123,8 +123,8 @@ public class APIOrderController extends APIController {
             }
 
         }
-        o.setFulfilled( order.isFulfilled );
-        o.setPickedUp( order.isPickedUp );
+        o.setisFulfilled( order.isFulfilled );
+        o.setisPickedUp( order.isPickedUp );
         service.save( o );
         return new ResponseEntity( successResponse( order.getName() + " was successfully updated to fulfilled" ),
                 HttpStatus.OK );

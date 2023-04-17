@@ -165,7 +165,7 @@ public class APICoffeeOrderTest {
         // service
         mvc.perform( post( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) );
-        order1.setFulfilled( true );
+        order1.setisFulfilled( true );
         mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
 
@@ -173,7 +173,7 @@ public class APICoffeeOrderTest {
                 .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
 
         assertTrue( fulfilledOrder.contains( "\"isFulfilled\":true,\"isPickedUp\":false" ) );
-        order1.setPickedUp( true );
+        order1.setisPickedUp( true );
         mvc.perform( put( "/api/v1/orders" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( order1 ) ) ).andExpect( status().isOk() );
 

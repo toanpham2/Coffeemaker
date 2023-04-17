@@ -54,8 +54,8 @@ public class CoffeeOrder extends DomainObject {
         super();
         setRecipe( recipe );
         setName( username );
-        setFulfilled( false );
-        setPickedUp( false );
+        setisFulfilled( false );
+        setisPickedUp( false );
     }
 
     /**
@@ -121,7 +121,7 @@ public class CoffeeOrder extends DomainObject {
      *
      * @return boolean of is the order fulfilled
      */
-    public Boolean getFulfilled () {
+    public Boolean getisFulfilled () {
         return isFulfilled;
     }
 
@@ -131,7 +131,7 @@ public class CoffeeOrder extends DomainObject {
      * @param status
      *            status to set
      */
-    public void setFulfilled ( final boolean status ) {
+    public void setisFulfilled ( final boolean status ) {
         this.isFulfilled = status;
     }
 
@@ -140,7 +140,7 @@ public class CoffeeOrder extends DomainObject {
      *
      * @return boolean of is the order pickedUp
      */
-    public Boolean getPickedUp () {
+    public Boolean getisPickedUp () {
         return isPickedUp;
     }
 
@@ -150,7 +150,7 @@ public class CoffeeOrder extends DomainObject {
      * @param status
      *            status to set
      */
-    public void setPickedUp ( final boolean status ) {
+    public void setisPickedUp ( final boolean status ) {
         this.isPickedUp = status;
     }
 
