@@ -69,11 +69,11 @@
 				return "guestpassword" + Math.floor(Math.random() * 100); 
 			}
 			
-			$scope.sendAnonUser = function(anonUser){
-				$http.post("api/v1/users", anonUser).then(function(response) {
+			$scope.sendAnonUser = function(){
+				$http.post("api/v1/users", $scope.anonUser).then(function(response) {
 					alert("Your temprary Username: " + $scope.anonUser.username + " | Password: " + $scope.anonUser.password)
 				}, function(rejection){
-					anonUser.username = generateRandomUsername()
+					$scope.anonUser.username = generateRandomUsername()
 					$scope.sendAnonUser()
 				})
 			}
@@ -90,7 +90,6 @@
 			
 			$scope.isAnon = localStorage.getItem('isAnon');
 			if($scope.isAnon === "true"){
-				console.log("ANON")
 				$scope.anonPassword = $scope.generatePassword()
 				$scope.anonUser = {
 						"username": $scope.generateRandomUsername(),
@@ -99,7 +98,7 @@
 						"submittedStaffCode": "",
 						"isStaff": false
 				} 
-				$scope.sendAnonUser($scope.anonUser)
+				$scope.sendAnonUser()
 				$scope.currentUser = $scope.anonUser.username
 			}
 			else{
@@ -114,6 +113,7 @@
 				$scope.invalidPrice = false;
 				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
 					console.log(response);
+					$scope.userOrder = response.data
 					$scope.currentOrderRecipe = response.data.recipe;
 					$scope.currentOrderName = response.data.recipe.name;
 					$scope.currentOrderPrice = response.data.recipe.price;
@@ -131,16 +131,17 @@
 			$scope.refresh()
 			
 			$scope.pickup = function() {
-				$scope.orderObject = {
-					recipe: $scope.currentOrderRecipe,
-					name: $scope.currentUser,
-				}
-				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+				$scope.userOrder.isPickedUp = true;
+				$http.put("api/v1/orders", $scope.userOrder).then(function(response) {
 					console.log(response);
+					$scope.currentOrderName = "N/A";
+					$scope.currentOrderPrice = "N/A";
+					$scope.currentOrderStatus = "N/A";
+					$scope.orderFulfilled = false;
 				}, function(rejection) {
 					console.error(rejection);
 				})
-				console.log($scope.orderObject);
+				console.log($scope.userOrder);
 			}
 			
 			$scope.placeOrder = function(param) {

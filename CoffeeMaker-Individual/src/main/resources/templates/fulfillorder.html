@@ -89,11 +89,13 @@
 			
 			$scope.fulfill = function(order) {
 				console.log(order);
-				$scope.orderObject = {
-					recipe: order.recipe,
-					name: order.name,
-				}
-				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+				//$scope.orderObject = {
+				//	recipe: order.recipe,
+				//	name: order.name,
+				//}
+				order.isFulfilled = true;
+				console.log(order)
+				$http.put("api/v1/orders", order).then(function(response) {
 					console.log(response);
 					$scope.refresh()
 					$scope.updateInventory(order.recipe.ingredients);

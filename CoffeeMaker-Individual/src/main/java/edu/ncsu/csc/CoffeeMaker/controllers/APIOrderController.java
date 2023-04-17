@@ -116,15 +116,17 @@ public class APIOrderController extends APIController {
             return new ResponseEntity( errorResponse( "Order with the name " + order.getName() + " does not exist" ),
                     HttpStatus.NOT_FOUND );
         }
-        for ( int i = 0; i < o.getRecipe().getAllIngredients().size(); i++ ) {
-            if ( o.getRecipe().getAllIngredients().get( i ).getAmount() > inventory
-                    .getOneIngredient( o.getRecipe().getAllIngredients().get( i ).getType() ).getAmount() ) {
-                return new ResponseEntity( errorResponse( "does not have enough Inventory" ), HttpStatus.CONFLICT );
+        // If the order is being fulfilled
+        if ( !o.isFulfilled && order.isFulfilled ) {
+            for ( int i = 0; i < o.getRecipe().getAllIngredients().size(); i++ ) {
+                if ( o.getRecipe().getAllIngredients().get( i ).getAmount() > inventory
+                        .getOneIngredient( o.getRecipe().getAllIngredients().get( i ).getType() ).getAmount() ) {
+                    return new ResponseEntity( errorResponse( "does not have enough Inventory" ), HttpStatus.CONFLICT );
+                }
             }
-
         }
-        o.setFulfilled( order.isFulfilled );
-        o.setPickedUp( order.isPickedUp );
+        o.setIsFulfilled( order.isFulfilled );
+        o.setIsPickedUp( order.isPickedUp );
         service.save( o );
         return new ResponseEntity( successResponse( order.getName() + " was successfully updated to fulfilled" ),
                 HttpStatus.OK );
