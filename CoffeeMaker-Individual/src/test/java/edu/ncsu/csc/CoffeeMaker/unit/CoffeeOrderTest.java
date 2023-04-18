@@ -83,8 +83,8 @@ public class CoffeeOrderTest {
         recipeService.save( r1 );
         service.save( order1 );
         assertEquals( 1, service.count() );
-        assertFalse( order1.getFulfilled() );
-        assertFalse( order1.getPickedUp() );
+        assertFalse( order1.getIsFulfilled() );
+        assertFalse( order1.getIsPickedUp() );
         assertEquals( "username123", order1.getName() );
         assertEquals( r1, order1.getRecipe() );
     }
