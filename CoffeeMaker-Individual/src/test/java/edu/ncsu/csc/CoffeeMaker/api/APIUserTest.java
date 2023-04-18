@@ -1,8 +1,10 @@
 package edu.ncsu.csc.CoffeeMaker.api;
 
+import static org.junit.Assert.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,6 +142,41 @@ public class APIUserTest {
         // customer2 duplicate should not be saved
         Assertions.assertEquals( 1, service.count() );
 
+    }
+
+    /**
+     * Test updating the user's order number with PUT call
+     *
+     * @throws Exception
+     *             if there are issues with posting user
+     */
+    @Test
+    @Transactional
+    public void testUpdateOrderNumber () throws Exception {
+        final User customer1 = new User( "user123", "pass5555", "onepiece", false, false );
+
+        // save this customer
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1 ) ) );
+
+        Assertions.assertEquals( 1, service.count() ); // there is one user in
+                                                       // the system
+
+        // order number starts at 0
+        Assertions.assertEquals( 0, customer1.getOrderNumber() );
+
+        // increment order number by calling put
+        mvc.perform( put( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1 ) ) ).andExpect( status().isOk() );
+
+        // make sure order number is 1 now
+        Assertions.assertEquals( 1, service.count(), "Should be just one user" );
+
+        final String userInfo = mvc.perform( get( "/api/v1/users/user123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        assertFalse( userInfo.contains( "\"orderNumber\":0" ) );
+        Assertions.assertTrue( userInfo.contains( "\"orderNumber\":1" ) );
+        // Assertions.assertEquals( 1, customer1.getOrderNumber() );
     }
 
     /**
