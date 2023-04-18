@@ -40,6 +40,9 @@ public class User extends DomainObject {
     /** whether a user is anonymous or not */
     private boolean             isAnon;
 
+    /** what order number the user is on - only applicable to customers */
+    private int                 orderNumber;
+
     /**
      * empty constructor
      */
@@ -69,6 +72,7 @@ public class User extends DomainObject {
             throw new IllegalArgumentException( "Staff code is incorrect" );
         }
         this.isAnon = isAnon;
+        this.orderNumber = 0;
     }
 
     /**
@@ -172,6 +176,25 @@ public class User extends DomainObject {
      */
     public void setIsAnon ( final boolean status ) {
         this.isAnon = status;
+    }
+
+    /**
+     * Gets the order number for the user
+     *
+     * @return order number for customer
+     */
+    public int getOrderNumber () {
+        return orderNumber;
+    }
+
+    /**
+     * Sets the order number for the user
+     *
+     * @param newOrderNumber
+     *            order number to set to
+     */
+    public void setOrderNumber ( final int newOrderNumber ) {
+        orderNumber = newOrderNumber;
     }
 
     /**
