@@ -96,7 +96,7 @@
 			
 			
 			<tr ng-repeat="order in orders">
-						<td><label>{{order.name}}</label></th>
+						<td><label>{{order.name.slice(0, order.name.lastIndexOf("_"))}}</label></th>
 						<td><label>{{order.recipe.name}}</label></th>
 						<td><label>{{order.recipe.price}}</label></th>						
 			</tr>

@@ -96,13 +96,22 @@
 						"password": $scope.anonPassword,
 						"isAnon": true,
 						"submittedStaffCode": "",
-						"isStaff": false
+						"isStaff": false,
+						"orderNumber": 1
 				} 
 				$scope.sendAnonUser()
 				$scope.currentUser = $scope.anonUser.username
+				$scope.currentUserObject = $scope.anonUser
 			}
 			else{
 				$scope.currentUser = localStorage.getItem('username');
+				$http.get("api/v1/users/" + $scope.currentUser).then(function(response){
+					$scope.currentUserObject = response.data
+				}, function(rejection){
+					console.log("could not find user")
+				}).finally(function(){
+					$scope.refresh()
+				})
 			}
 
 			
@@ -111,7 +120,7 @@
 			$scope.refresh = function() {
 				$scope.multipleOrderError = false;
 				$scope.invalidPrice = false;
-				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
+				$http.get("api/v1/orders/" + $scope.currentUser + "_" + $scope.currentUserObject.orderNumber).then(function(response) {
 					console.log(response);
 					$scope.userOrder = response.data
 					$scope.currentOrderRecipe = response.data.recipe;
@@ -128,7 +137,6 @@
 				})
 			}
 			
-			$scope.refresh()
 			
 			$scope.pickup = function() {
 				$scope.userOrder.isPickedUp = true;
@@ -138,6 +146,15 @@
 					$scope.currentOrderPrice = "N/A";
 					$scope.currentOrderStatus = "N/A";
 					$scope.orderFulfilled = false;
+					
+					//udpate the order number
+					$http.put("api/v1/users", $scope.currentUser).then(function(response){
+						console.log("order number updated")
+					}, function(rejection){
+						console.log("failed to update order number")
+					})
+					$scope.currentUserObject.orderNumber += 1
+					
 				}, function(rejection) {
 					console.error(rejection);
 				})
@@ -155,7 +172,9 @@
 					$scope.validPayment = true;
 					$scope.orderObject = {
 							recipe: $scope.orderRecipe,
-							name: $scope.currentUser,
+							name: ($scope.currentUser + "_" + $scope.currentUserObject.orderNumber.toString()),
+							isFulfilled: false,
+							isPickedUp: false
 					}
 					
 					$scope.change = parseInt($scope.payment) - parseInt($scope.orderRecipe.price);
