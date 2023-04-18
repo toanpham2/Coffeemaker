@@ -44,6 +44,10 @@
 		        );
 			}
 			
+			$scope.home = function(){
+				window.location.href = "/staffhome.html"
+			}
+			
 			$scope.del = function(){				
 				if ($scope.deleteAll) {
 					for (var i = 0, len = $scope.recipes.length; i < len; i++) {
@@ -90,9 +94,9 @@
 			<div ng-if="submissionSuccess">Recipe deleted successfully</div>
 
 
+		<div id="centered">
+			<button class="btn" type="button" ng-click=home() >Home</button>
 		</div>
-		<a href="/index">Home</a>
-	</div>
 
 
 
