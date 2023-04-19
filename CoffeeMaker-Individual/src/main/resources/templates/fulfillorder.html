@@ -99,8 +99,10 @@
 					console.log(response);
 					$scope.refresh()
 					$scope.updateInventory(order.recipe.ingredients);
+					$scope.response = "Order fulfilled"
+
 				}, function(rejection) {
-					console.log(rejection);
+					$scope.response = "Not enough inventory for order"
 				})
 				
 			}
@@ -141,12 +143,18 @@
 		</table>
 		
 		<div id="centered">
-			<button class="btn" type="button" ng-click=home() >Home</button>
+			<button class="btn" type="button" ng-click=refresh() >Refresh</button>
 		</div>
 		
 		<div id="centered">
-			<button class="btn" type="button" ng-click=refresh() >Refresh</button>
+			<label>{{response}}</label>
 		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click=home() >Home</button>
+		</div>
+		
+
 		
 		
 

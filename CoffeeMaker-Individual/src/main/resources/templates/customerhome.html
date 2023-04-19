@@ -71,7 +71,7 @@
 			
 			$scope.sendAnonUser = function(){
 				$http.post("api/v1/users", $scope.anonUser).then(function(response) {
-					alert("Your temprary Username: " + $scope.anonUser.username + " | Password: " + $scope.anonUser.password)
+					alert("Your temprary credentials:\nUsername: " + $scope.anonUser.username + " \nPassword: " + $scope.anonUser.password)
 				}, function(rejection){
 					$scope.anonUser.username = generateRandomUsername()
 					$scope.sendAnonUser()
@@ -193,17 +193,18 @@
 					console.log($scope.change);		
 					
 					if ($scope.currentOrderStatus != "N/A") {
-						$scope.multipleOrderError = true;
+						$scope.response = "Error: Cannot place more than one unfinished order at a time.";
 					} else {
 						$http.post("api/v1/orders", $scope.orderObject).then(function(response) {
 							console.log(response);
 							$scope.refresh()
+							$scope.response = "Order palced. Your change is $" + $scope.change
 						}, function(rejection) {
 							console.log(rejection);
 						})
 					}
 				} else {
-					$scope.invalidPrice = true;
+					$scope.response = "Not enough payment entered"
 				}
 				
 				
@@ -239,7 +240,7 @@
 					<label> {{currentOrderName}} </label>
 				</td>
 				<td>
-					<label> {{currentOrderPrice}} </label>
+					<label> {{currentOrderPrice == "N/A" ? currentOrderPrice : "$" + currentOrderPrice.toFixed(2)}} </label>
 				</td>
 				<td>
 					<label> {{currentOrderStatus}} </label>
@@ -257,7 +258,7 @@
 		
 		<div id="centered">
 			<ul>
-				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}: ${{recipe.price}}
+				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}: ${{recipe.price.toFixed(2)}}
 						<input type="radio" ng-model="$parent.name" name="name"
 						value="{{recipe.name}}" required="true" />
 				</label></li>
@@ -280,19 +281,24 @@
 			<button class="btn" type="button" ng-click = "placeOrder(name)" >Order Coffee</button>
 		</div>
 		
-		<div>
+		<!--  
+		<div id="centered">
 			<label ng-show=multipleOrderError>Error: Cannot place more than one unfulfilled order at a time.</label>
 		</div>
 		
-		<div>
+		<div id="centered">
 			<label ng-show=invalidPrice>Error: Invalid price.</label>
-			<label id="centered" ng-show=validPayment>Your change is ${{change}}.</label>
+			<label  ng-show=validPayment>Your change is ${{change}}.</label>
+		</div>
+		-->
+		
+		<div id="centered">
+			<label>{{response}}</label>
 		</div>
 		
 		<div id="centered">
 			<a href="login"><button>Logout</button></a>
 		</div>
-		
 
 	</div>
 
