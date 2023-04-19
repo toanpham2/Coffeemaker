@@ -1,6 +1,7 @@
 package edu.ncsu.csc.CoffeeMaker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class TestDatabaseInteraction {
         assertEquals( r.getOneIngredient( "Chocolate" ), dbRecipe.getOneIngredient( "Chocolate" ) );
         assertEquals( r.getOneIngredient( "Coffee" ), dbRecipe.getOneIngredient( "Coffee" ) );
         assertEquals( r.getOneIngredient( "Milk" ), dbRecipe.getOneIngredient( "Milk" ) );
-        assertEquals( r.getPrice(), dbRecipe.getPrice() );
+        assertTrue( r.getPrice() == dbRecipe.getPrice() );
         assertEquals( r.getOneIngredient( "Sugar" ), dbRecipe.getOneIngredient( "Sugar" ) );
 
         assertEquals( r, recipeService.findByName( "Coffee 1" ) );

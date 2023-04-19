@@ -33,7 +33,7 @@ public class Recipe extends DomainObject {
 
     /** Recipe price */
     @Min ( 0 )
-    private Integer  price;
+    private float    price;
 
     /** List of ingredients */
     @JsonFormat ( with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY )
@@ -102,7 +102,7 @@ public class Recipe extends DomainObject {
      *
      * @return Returns the price.
      */
-    public Integer getPrice () {
+    public float getPrice () {
         return price;
     }
 
@@ -112,7 +112,7 @@ public class Recipe extends DomainObject {
      * @param price
      *            The price to set.
      */
-    public void setPrice ( final Integer price ) {
+    public void setPrice ( final float price ) {
         this.price = price;
     }
 
