@@ -128,7 +128,7 @@
 			
 			
 			<tr ng-repeat="order in orders">
-						<td><label>{{order.name}}</label></th>
+						<td><label>{{order.name.slice(0, order.name.lastIndexOf("_"))}}</label></th>
 						<td><label>{{order.recipe.name}}</label></th>
 						<td>
 							<label>
@@ -142,6 +142,10 @@
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click=home() >Home</button>
+		</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click=refresh() >Refresh</button>
 		</div>
 		
 		

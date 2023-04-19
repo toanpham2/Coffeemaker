@@ -165,9 +165,13 @@ public class APIUserTest {
         // order number starts at 0
         Assertions.assertEquals( 0, customer1.getOrderNumber() );
 
+        final String userInfo1 = mvc.perform( get( "/api/v1/users/user123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        System.out.println( userInfo1.toString() );
+
         // increment order number by calling put
-        mvc.perform( put( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
-                .content( TestUtils.asJsonString( customer1 ) ) ).andExpect( status().isOk() );
+        mvc.perform( put( "/api/v1/users/user123" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1.getUsername() ) ) ).andExpect( status().isOk() );
 
         // make sure order number is 1 now
         Assertions.assertEquals( 1, service.count(), "Should be just one user" );
@@ -193,8 +197,8 @@ public class APIUserTest {
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( anonUser ) ) );
         // delete this user
-        mvc.perform( delete( "/api/v1/usersDel/syd123" ).contentType( MediaType.APPLICATION_JSON ) );
-        mvc.perform( delete( "/api/v1/usersDel/randomName" ).contentType( MediaType.APPLICATION_JSON )
+        mvc.perform( delete( "/api/v1/users/syd123" ).contentType( MediaType.APPLICATION_JSON ) );
+        mvc.perform( delete( "/api/v1/users/randomName" ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( anonUser ) ) ).andExpect( status().isNotFound() );
         Assertions.assertEquals( 0, service.count() );
     }

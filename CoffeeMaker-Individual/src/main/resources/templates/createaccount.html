@@ -56,20 +56,22 @@
 				} else {
 					$scope.invalidPassword = false;
 					$scope.user = {
-							"username": $scope.enteredUsername,
-							"password": $scope.enteredPassword,
-							"submittedStaffCode": $scope.enteredStaffCode,
-							"isStaff": isStaff
-						}
+						"username": $scope.enteredUsername,
+						"password": $scope.enteredPassword,
+						"submittedStaffCode": $scope.enteredStaffCode,
+						"isStaff": isStaff,
+						"isAnon": false,
+						"orderNumber": 1
+					}
 						
 							
-						$http.post("api/v1/users", $scope.user).then(function(response) {
-							$scope.response = response
-							$scope.reset()
-						}, function(rejection){
-							$scope.response = rejection
-							$scope.enteredStaffCode = "";
-						})
+					$http.post("api/v1/users", $scope.user).then(function(response) {
+						$scope.response = response
+						$scope.reset()
+					}, function(rejection){
+						$scope.response = rejection
+						$scope.enteredStaffCode = "";
+					})
 				}
 			}
 			

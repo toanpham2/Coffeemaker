@@ -88,7 +88,7 @@ public class APIUserController extends APIController {
      * @return Response Entity
      */
     @SuppressWarnings ( { "rawtypes", "unchecked" } )
-    @DeleteMapping ( BASE_PATH + "/usersDel/{username}" )
+    @DeleteMapping ( BASE_PATH + "/users/{username}" )
     public ResponseEntity deleteUser ( @PathVariable final String username ) {
         // if there is already a user with the same username
         if ( null == service.findByUsername( username ) ) {
@@ -113,9 +113,9 @@ public class APIUserController extends APIController {
      * @return Response Entity
      */
     @SuppressWarnings ( { "rawtypes", "unchecked" } )
-    @PutMapping ( BASE_PATH + "/users" )
-    public ResponseEntity updateOrderNumber ( @RequestBody final User user ) {
-        final User u = service.findByUsername( user.getUsername() );
+    @PutMapping ( BASE_PATH + "/users/{username}" )
+    public ResponseEntity updateOrderNumber ( @PathVariable final String username ) {
+        final User u = service.findByUsername( username );
         u.setOrderNumber( u.getOrderNumber() + 1 );
         service.save( u );
         return new ResponseEntity( successResponse( u.getUsername() + " order number was successfully updated" ),
