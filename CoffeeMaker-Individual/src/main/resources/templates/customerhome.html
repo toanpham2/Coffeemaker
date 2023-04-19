@@ -148,14 +148,15 @@
 					$scope.orderFulfilled = false;
 					
 					//udpate the order number
-					$http.put("api/v1/users", $scope.currentUser).then(function(response){
+					$http.put("api/v1/users/" + $scope.currentUser).then(function(response){
 						console.log("order number updated")
 					}, function(rejection){
 						console.log("failed to update order number")
 					})
-					if($scope.isAnon === "true"){
+					console.log($scope.currentUserObject.isAnon)
+					if($scope.currentUserObject.isAnon){
 						console.log("here!");
-						$http.delete("api/v1/users/" + $scope.anonUser.username).then(function(response){
+						$http.delete("api/v1/users/" + $scope.currentUser).then(function(response){
 							console.log(response);
 						}, function(rejection) {
 							console.error(rejection);

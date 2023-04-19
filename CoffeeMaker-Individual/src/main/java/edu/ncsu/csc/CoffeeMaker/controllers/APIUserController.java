@@ -113,8 +113,8 @@ public class APIUserController extends APIController {
      * @return Response Entity
      */
     @SuppressWarnings ( { "rawtypes", "unchecked" } )
-    @PutMapping ( BASE_PATH + "/users" )
-    public ResponseEntity updateOrderNumber ( @RequestBody final String username ) {
+    @PutMapping ( BASE_PATH + "/users/{username}" )
+    public ResponseEntity updateOrderNumber ( @PathVariable final String username ) {
         final User u = service.findByUsername( username );
         u.setOrderNumber( u.getOrderNumber() + 1 );
         service.save( u );
