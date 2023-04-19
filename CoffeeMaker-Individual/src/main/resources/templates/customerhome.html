@@ -153,8 +153,17 @@
 					}, function(rejection){
 						console.log("failed to update order number")
 					})
-					$scope.currentUserObject.orderNumber += 1
-					
+					if($scope.isAnon === "true"){
+						console.log("here!");
+						$http.delete("api/v1/users/" + $scope.anonUser.username).then(function(response){
+							console.log(response);
+						}, function(rejection) {
+							console.error(rejection);
+						})
+						$scope.anonLogout()
+					} else {
+						$scope.currentUserObject.orderNumber += 1
+					}
 				}, function(rejection) {
 					console.error(rejection);
 				})
@@ -198,6 +207,10 @@
 				
 				
 				
+			}
+			
+			$scope.anonLogout = function() {
+				window.location.href = "/"
 			}
 			
 			$scope.logout = function() {

@@ -88,7 +88,7 @@ public class APIUserController extends APIController {
      * @return Response Entity
      */
     @SuppressWarnings ( { "rawtypes", "unchecked" } )
-    @DeleteMapping ( BASE_PATH + "/usersDel/{username}" )
+    @DeleteMapping ( BASE_PATH + "/users/{username}" )
     public ResponseEntity deleteUser ( @PathVariable final String username ) {
         // if there is already a user with the same username
         if ( null == service.findByUsername( username ) ) {
