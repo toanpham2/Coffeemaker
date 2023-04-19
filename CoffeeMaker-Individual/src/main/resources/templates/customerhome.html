@@ -187,7 +187,7 @@
 							isPickedUp: false
 					}
 					
-					$scope.change = parseInt($scope.payment) - parseInt($scope.orderRecipe.price);
+					$scope.change = (parseFloat($scope.payment) - parseFloat($scope.orderRecipe.price)).toFixed(2);
 					console.log($scope.payment);
 					console.log($scope.orderRecipe.price);
 					console.log($scope.change);		
