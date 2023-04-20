@@ -5,39 +5,7 @@
 <title>Add Ingredient</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<style>
-	.line1{
-		position: relative;
-		padding: 10px;	
-		
-	}
-	
-	
-	.line2{
-		position: relative;
-		padding: 10px;
-
-	}
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-	}
-	
-	.submitbutton{
-		padding: 10px;
-	}
-	
-	#inputlabel{
-		font-size: 25px;
-	}
-	
-	.inputbox{
-		width: 300px;
-	}
-	
-	
-</style>
+<link rel="stylesheet" href="css/addingredient.css">
 
 </head>
 
@@ -112,6 +80,10 @@
 				}
 			}
 			
+			$scope.home = function(){
+				window.location.href = "/staffhome.html"
+			}
+			
 			$scope.reset();
 			
 		});
@@ -137,7 +109,15 @@
 		
 		<div ng-show="success" id="centered">Inventory Successfully Updated</div>
 		<div ng-show="failure" id="centered">{{errorMessage}}</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click=home() >Home</button>
+		</div>
+		
 	</div>
+	
+	
+	
 </div>
 
 

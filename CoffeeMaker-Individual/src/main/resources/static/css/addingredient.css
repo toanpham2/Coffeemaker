@@ -1,0 +1,29 @@
+.line1{
+	position: relative;
+	padding: 10px;	
+	
+}
+
+.line2{
+	position: relative;
+	padding: 10px;
+
+}
+
+#centered{
+	display: flex;
+	justify-content: center;
+}
+
+.submitbutton{
+	padding: 10px;
+}
+
+#inputlabel{
+	font-size: 25px;
+}
+
+.inputbox{
+	width: 300px;
+}
+	

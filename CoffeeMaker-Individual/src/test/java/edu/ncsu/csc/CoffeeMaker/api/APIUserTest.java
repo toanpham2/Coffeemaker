@@ -1,7 +1,10 @@
 package edu.ncsu.csc.CoffeeMaker.api;
 
+import static org.junit.Assert.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,7 +74,7 @@ public class APIUserTest {
     @Test
     @Transactional
     public void testAddStaff () throws Exception {
-        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece", true );
+        final User user2 = new User( "staffuser4", "staffpass123", "OnePiece", true, false );
 
         // add new user (register)
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
@@ -116,7 +119,7 @@ public class APIUserTest {
     @Transactional
     public void testAddCustomer () throws Exception {
         // first customer
-        final User customer1 = new User( "syd123", "pass000", "onepiece", false );
+        final User customer1 = new User( "syd123", "pass000", "onepiece", false, false );
 
         // save this customer
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
@@ -131,7 +134,7 @@ public class APIUserTest {
         Assertions.assertTrue( userInfo.contains( "pass000" ) );
 
         // create another customer with the same username
-        final User customer2 = new User( "syd123", "word444", "N/A", false );
+        final User customer2 = new User( "syd123", "word444", "N/A", false, false );
 
         // save this customer, should get status 409 conflict
         mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
@@ -139,6 +142,65 @@ public class APIUserTest {
         // customer2 duplicate should not be saved
         Assertions.assertEquals( 1, service.count() );
 
+    }
+
+    /**
+     * Test updating the user's order number with PUT call
+     *
+     * @throws Exception
+     *             if there are issues with posting user
+     */
+    @Test
+    @Transactional
+    public void testUpdateOrderNumber () throws Exception {
+        final User customer1 = new User( "user123", "pass5555", "onepiece", false, false );
+
+        // save this customer
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1 ) ) );
+
+        Assertions.assertEquals( 1, service.count() ); // there is one user in
+                                                       // the system
+
+        // order number starts at 0
+        Assertions.assertEquals( 0, customer1.getOrderNumber() );
+
+        final String userInfo1 = mvc.perform( get( "/api/v1/users/user123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        System.out.println( userInfo1.toString() );
+
+        // increment order number by calling put
+        mvc.perform( put( "/api/v1/users/user123" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( customer1.getUsername() ) ) ).andExpect( status().isOk() );
+
+        // make sure order number is 1 now
+        Assertions.assertEquals( 1, service.count(), "Should be just one user" );
+
+        final String userInfo = mvc.perform( get( "/api/v1/users/user123" ) ).andDo( print() )
+                .andExpect( status().isOk() ).andReturn().getResponse().getContentAsString();
+        assertFalse( userInfo.contains( "\"orderNumber\":0" ) );
+        Assertions.assertTrue( userInfo.contains( "\"orderNumber\":1" ) );
+        // Assertions.assertEquals( 1, customer1.getOrderNumber() );
+    }
+
+    /**
+     * Test deleting a current User
+     *
+     * @throws Exception
+     *             if there are issues in deleting user
+     */
+    @Test
+    @Transactional
+    public void testDeleteCustomer () throws Exception {
+        final User anonUser = new User( "syd123", "", "n/a", false, true );
+        // save this customer
+        mvc.perform( post( "/api/v1/users" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( anonUser ) ) );
+        // delete this user
+        mvc.perform( delete( "/api/v1/users/syd123" ).contentType( MediaType.APPLICATION_JSON ) );
+        mvc.perform( delete( "/api/v1/users/randomName" ).contentType( MediaType.APPLICATION_JSON )
+                .content( TestUtils.asJsonString( anonUser ) ) ).andExpect( status().isNotFound() );
+        Assertions.assertEquals( 0, service.count() );
     }
 
 }

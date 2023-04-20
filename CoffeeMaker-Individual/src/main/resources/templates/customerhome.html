@@ -2,43 +2,7 @@
 
 <title>My CoffeeMaker Home</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<style>
-	.line1{
-		position: relative;
-		padding: 10px;	
-		
-	}
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-		padding: 10px;
-	}
-	
-	.line{
-		padding-bottom: 20px;
-	}
-	
-	.btn{
-		width: 200px;
-	}
-	
-	#inputLabel {
-		font-size: 30px; 	
-	}
-	
-	th, td {
-		padding: 17px 70px;
-		border: 1px solid;
-	}
-	
-	table {
-  		border-collapse: collapse;
-	}
-	
-		
-</style>
+<link rel="stylesheet" href="css/customerhome.css">
 
 </head>
 
@@ -50,6 +14,35 @@
 		var app = angular.module('myApp', []);
 		app.controller('homeController', function($scope, $http, $q) {
 			
+			console.log("JS")
+
+			
+			$scope.generateRandomUsername = function(){
+				adj = ["Beautiful", "Mysterious", "Energetic", "Serene", "Enchanting", "Courageous", "Intriguing", "Vibrant", "Majestic", "Radiant"]
+
+				colors = ["Red", "Blue", "Green", "Yellow", "Purple", "Orange", "Pink", "Black", "White", "Gray"]
+
+				animals = ["Lion", "Elephant", "Dolphin", "Penguin", "Kangaroo", "Tiger", "Giraffe", "Crocodile", "Koala", "Penguin"]
+
+				randomElement = adj[Math.floor(Math.random() * 10)] + colors[Math.floor(Math.random() * 10)] + animals[Math.floor(Math.random() * 10)];
+
+				return randomElement
+			}
+			
+			$scope.generatePassword = function(){
+				return "guestpassword" + Math.floor(Math.random() * 100); 
+			}
+			
+			$scope.sendAnonUser = function(){
+				$http.post("api/v1/users", $scope.anonUser).then(function(response) {
+					alert("Your temprary credentials:\nUsername: " + $scope.anonUser.username + " \nPassword: " + $scope.anonUser.password)
+				}, function(rejection){
+					$scope.anonUser.username = generateRandomUsername()
+					$scope.sendAnonUser()
+				})
+			}
+			
+			$scope.validPayment = false;
 			$scope.payment = 0;
 			$http.get("/api/v1/recipes").then(function(response) {
 				$scope.recipes = response.data;
@@ -59,17 +52,47 @@
 			$scope.currentOrderPrice = "N/A";
 			$scope.currentOrderStatus = "N/A";
 			
-			$scope.currentUser = localStorage.getItem('username');
+			$scope.isAnon = localStorage.getItem('isAnon');
+			if($scope.isAnon === "true"){
+				$scope.anonPassword = $scope.generatePassword()
+				$scope.anonUser = {
+						"username": $scope.generateRandomUsername(),
+						"password": $scope.anonPassword,
+						"isAnon": true,
+						"submittedStaffCode": "",
+						"isStaff": false,
+						"orderNumber": 1
+				} 
+				$scope.sendAnonUser()
+				$scope.currentUser = $scope.anonUser.username
+				$scope.currentUserObject = $scope.anonUser
+			}
+			else{
+				$scope.currentUser = localStorage.getItem('username');
+				$http.get("api/v1/users/" + $scope.currentUser).then(function(response){
+					$scope.currentUserObject = response.data
+				}, function(rejection){
+					console.log("could not find user")
+				}).finally(function(){
+					$scope.refresh()
+				})
+			}
+
+			
+
 			
 			$scope.refresh = function() {
 				$scope.multipleOrderError = false;
 				$scope.invalidPrice = false;
-				$http.get("api/v1/orders/" + $scope.currentUser).then(function(response) {
+				$http.get("api/v1/orders/" + $scope.currentUser + "_" + $scope.currentUserObject.orderNumber).then(function(response) {
 					console.log(response);
+					$scope.userOrder = response.data
+					$scope.currentOrderRecipe = response.data.recipe;
 					$scope.currentOrderName = response.data.recipe.name;
 					$scope.currentOrderPrice = response.data.recipe.price;
 					if(response.data.isFulfilled) {
 						$scope.currentOrderStatus = "Fulfilled";
+						$scope.orderFulfilled = true;
 					} else {
 						$scope.currentOrderStatus = "In Progress";
 					}
@@ -78,7 +101,39 @@
 				})
 			}
 			
-			$scope.refresh()
+			
+			$scope.pickup = function() {
+				$scope.userOrder.isPickedUp = true;
+				$http.put("api/v1/orders", $scope.userOrder).then(function(response) {
+					console.log(response);
+					$scope.currentOrderName = "N/A";
+					$scope.currentOrderPrice = "N/A";
+					$scope.currentOrderStatus = "N/A";
+					$scope.orderFulfilled = false;
+					
+					//udpate the order number
+					$http.put("api/v1/users/" + $scope.currentUser).then(function(response){
+						console.log("order number updated")
+					}, function(rejection){
+						console.log("failed to update order number")
+					})
+					console.log($scope.currentUserObject.isAnon)
+					if($scope.currentUserObject.isAnon){
+						console.log("here!");
+						$http.delete("api/v1/users/" + $scope.currentUser).then(function(response){
+							console.log(response);
+						}, function(rejection) {
+							console.error(rejection);
+						})
+						$scope.anonLogout()
+					} else {
+						$scope.currentUserObject.orderNumber += 1
+					}
+				}, function(rejection) {
+					console.error(rejection);
+				})
+				console.log($scope.userOrder);
+			}
 			
 			$scope.placeOrder = function(param) {
 				for (let k = 0; k <  $scope.recipes.length; k++){
@@ -88,31 +143,40 @@
 				}
 				
 				if($scope.orderRecipe.price  <= $scope.payment) {
+					$scope.validPayment = true;
 					$scope.orderObject = {
 							recipe: $scope.orderRecipe,
-							name: $scope.currentUser,
+							name: ($scope.currentUser + "_" + $scope.currentUserObject.orderNumber.toString()),
+							isFulfilled: false,
+							isPickedUp: false
 					}
 					
-					//if($scope.currentOrderStatus == "Fulfilled") {
-						
-					//} else 
-						
+					$scope.change = (parseFloat($scope.payment) - parseFloat($scope.orderRecipe.price)).toFixed(2);
+					console.log($scope.payment);
+					console.log($scope.orderRecipe.price);
+					console.log($scope.change);		
+					
 					if ($scope.currentOrderStatus != "N/A") {
-						$scope.multipleOrderError = true;
+						$scope.response = "Error: Cannot place more than one unfinished order at a time.";
 					} else {
 						$http.post("api/v1/orders", $scope.orderObject).then(function(response) {
 							console.log(response);
 							$scope.refresh()
+							$scope.response = "Order placed. Your change is $" + $scope.change
 						}, function(rejection) {
 							console.log(rejection);
 						})
 					}
 				} else {
-					$scope.invalidPrice = true;
+					$scope.response = "Not enough payment entered"
 				}
 				
 				
 				
+			}
+			
+			$scope.anonLogout = function() {
+				window.location.href = "/"
 			}
 			
 			$scope.logout = function() {
@@ -125,7 +189,7 @@
 	
 	<div ng-app="myApp" class="generic-container ng-cloak" ng-controller="homeController">
 
-		<h1 style="text-align: center; font-size: 30px;">Current Order</h1>
+		<h1 style="text-align: center; font-size: 30px;">Current Order For {{currentUser}}</h1>
 		
 		<table id="centered">
 		
@@ -140,7 +204,7 @@
 					<label> {{currentOrderName}} </label>
 				</td>
 				<td>
-					<label> {{currentOrderPrice}} </label>
+					<label> {{currentOrderPrice == "N/A" ? currentOrderPrice : "$" + currentOrderPrice.toFixed(2)}} </label>
 				</td>
 				<td>
 					<label> {{currentOrderStatus}} </label>
@@ -151,13 +215,14 @@
 		
 		<div id="centered">
 			<button class="btn" type="button" ng-click = "refresh()" >Refresh</button>
+			<button class="btn" type="button" ng-show = "orderFulfilled" ng-click = "pickup()" >Pick-Up</button>
 		</div>
 		
 		<h1 style="text-align: center; font-size: 30px;">Place New Order</h1>
 		
 		<div id="centered">
 			<ul>
-				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}
+				<li ng-repeat="recipe in recipes"><label>{{recipe.name}}: ${{recipe.price.toFixed(2)}}
 						<input type="radio" ng-model="$parent.name" name="name"
 						value="{{recipe.name}}" required="true" />
 				</label></li>
@@ -180,18 +245,24 @@
 			<button class="btn" type="button" ng-click = "placeOrder(name)" >Order Coffee</button>
 		</div>
 		
-		<div>
+		<!--  
+		<div id="centered">
 			<label ng-show=multipleOrderError>Error: Cannot place more than one unfulfilled order at a time.</label>
 		</div>
 		
-		<div>
+		<div id="centered">
 			<label ng-show=invalidPrice>Error: Invalid price.</label>
+			<label  ng-show=validPayment>Your change is ${{change}}.</label>
+		</div>
+		-->
+		
+		<div id="centered">
+			<label>{{response}}</label>
 		</div>
 		
 		<div id="centered">
 			<a href="login"><button>Logout</button></a>
 		</div>
-		
 
 	</div>
 

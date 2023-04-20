@@ -2,43 +2,8 @@
 
 <title>Fulfill Order</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="css/fulfillorder.css">
 
-<style>
-	.line1{
-		position: relative;
-		padding: 10px;	
-		
-	}
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-		padding: 10px;
-	}
-	
-	.line{
-		padding-bottom: 20px;
-	}
-	
-	.btn{
-		width: 200px;
-	}
-	
-	#inputLabel {
-		font-size: 30px; 	
-	}
-	
-	th, td {
-		padding: 17px 70px;
-		border: 1px solid;
-	}
-	
-	table {
-  		border-collapse: collapse;
-	}
-	
-		
-</style>
 
 </head>
 
@@ -89,16 +54,20 @@
 			
 			$scope.fulfill = function(order) {
 				console.log(order);
-				$scope.orderObject = {
-					recipe: order.recipe,
-					name: order.name,
-				}
-				$http.put("api/v1/orders", $scope.orderObject).then(function(response) {
+				//$scope.orderObject = {
+				//	recipe: order.recipe,
+				//	name: order.name,
+				//}
+				order.isFulfilled = true;
+				console.log(order)
+				$http.put("api/v1/orders", order).then(function(response) {
 					console.log(response);
 					$scope.refresh()
 					$scope.updateInventory(order.recipe.ingredients);
+					$scope.response = "Order fulfilled"
+
 				}, function(rejection) {
-					console.log(rejection);
+					$scope.response = "Not enough inventory for order"
 				})
 				
 			}
@@ -126,7 +95,7 @@
 			
 			
 			<tr ng-repeat="order in orders">
-						<td><label>{{order.name}}</label></th>
+						<td><label>{{order.name.slice(0, order.name.lastIndexOf("_"))}}</label></th>
 						<td><label>{{order.recipe.name}}</label></th>
 						<td>
 							<label>
@@ -139,8 +108,18 @@
 		</table>
 		
 		<div id="centered">
+			<button class="btn" type="button" ng-click=refresh() >Refresh</button>
+		</div>
+		
+		<div id="centered">
+			<label>{{response}}</label>
+		</div>
+		
+		<div id="centered">
 			<button class="btn" type="button" ng-click=home() >Home</button>
 		</div>
+		
+
 		
 		
 

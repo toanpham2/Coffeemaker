@@ -37,8 +37,14 @@ public class User extends DomainObject {
     /** code for if a user is a staff member */
     private static final String STAFF_CODE = "OnePiece";
 
+    /** whether a user is anonymous or not */
+    private boolean             isAnon;
+
+    /** what order number the user is on - only applicable to customers */
+    private int                 orderNumber;
+
     /**
-     * empty constructor
+     * empty constructor for testing purposes
      */
     public User () {
 
@@ -55,9 +61,11 @@ public class User extends DomainObject {
      *            code to indicate if a user is staff or not
      * @param isStaff
      *            true if user is staff, false otherwise
+     * @param isAnon
+     *            true if user is placing an anonymous order
      */
-    public User ( final String username, final String password, final String submittedStaffCode,
-            final boolean isStaff ) {
+    public User ( final String username, final String password, final String submittedStaffCode, final boolean isStaff,
+            final boolean isAnon ) {
         this.username = username;
         this.password = password;
         this.isStaff = isStaff;
@@ -65,6 +73,8 @@ public class User extends DomainObject {
         if ( isStaff && !submittedStaffCode.equals( STAFF_CODE ) ) {
             throw new IllegalArgumentException( "Staff code is incorrect" );
         }
+        this.isAnon = isAnon;
+        this.orderNumber = 0;
     }
 
     /**
@@ -148,6 +158,45 @@ public class User extends DomainObject {
     @Override
     public Serializable getId () {
         return id;
+    }
+
+    /**
+     * Gets staff the isAnon status of user
+     *
+     * @return true if isAnon is true, false otherwise
+     */
+    public boolean getIsAnon () {
+        return isAnon;
+    }
+
+    /**
+     * Sets the user to isAnonymous
+     *
+     * @param status
+     *            status to of anonymous user is set
+     *
+     */
+    public void setIsAnon ( final boolean status ) {
+        this.isAnon = status;
+    }
+
+    /**
+     * Gets the order number for the user
+     *
+     * @return order number for customer
+     */
+    public int getOrderNumber () {
+        return orderNumber;
+    }
+
+    /**
+     * Sets the order number for the user
+     *
+     * @param newOrderNumber
+     *            order number to set to
+     */
+    public void setOrderNumber ( final int newOrderNumber ) {
+        orderNumber = newOrderNumber;
     }
 
     /**

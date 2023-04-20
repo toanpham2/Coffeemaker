@@ -88,7 +88,7 @@ public class APICoffeeTest {
 
         mvc.perform( post( String.format( "/api/v1/makecoffee/%s", name ) ).contentType( MediaType.APPLICATION_JSON )
                 .content( TestUtils.asJsonString( 60 ) ) ).andExpect( status().isOk() )
-                .andExpect( jsonPath( "$.message" ).value( 10 ) );
+                .andExpect( jsonPath( "$.message" ).value( 10.0 ) );
 
     }
 

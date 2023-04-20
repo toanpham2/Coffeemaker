@@ -4,35 +4,7 @@
 
 <title>Add Recipe</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<style>
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-		position: relative;
-		padding: 10px;
-	}
-	
-	.submitbutton{
-		margin-left: 10px;
-		margin-right: 10px;
-		font-size: 15px;
-		
-	}
-	
-	#inputlabel{
-		font-size: 25px;
-	}
-	
-	.inputbox{
-		width: 300px;
-	}
-	
-	
-	
-</style>
-
+<link rel="stylesheet" href="css/addrecipe.css">
 </head>
 
 <body>
@@ -144,6 +116,10 @@
 
 			}
 			
+			$scope.home = function(){
+				window.location.href = "/staffhome.html"
+			}
+			
 			$scope.reset();
 			
 		});
@@ -156,12 +132,12 @@
 		<!-- bind name and price fields to the recipe object fields -->
 		<h1 style="text-align: center; font-size: 50px;">Add Recipe</h1>
 		<div class="line1" id="centered">
-			<label for="ingredientname" id="inputlabel">Recipe Name: </label>
+			<label for="ingredientname" class="recipeunit" id="inputlabel">Recipe Name: </label>
 			<input type="text" id="ingredientname" class="inputbox" ng-model="recipeObject.name">
 		</div>
 		
 		<div class="line2" id="centered">
-			<label for="recipeprice" id="inputlabel">Recipe Price: </label>
+			<label for="recipeprice" class="recipeunit" id="inputlabel">Recipe Price: </label>
 			<input type="text" id="recipeprice" class="inputbox" ng-model="recipeObject.price">
 		</div>
 		
@@ -180,9 +156,6 @@
 			</div>
 		</div>
 		
-		<div id="centered">
-			<button type="button" ng-click="createRecipe()">Create Recipe</button>
-		</div>
 
 		<!-- 
 			create a checkbox item for each ingredient in the inventoy
@@ -203,9 +176,16 @@
 			<button type="button" class="submitbutton" ng-click="addIngredients()">Add Selected Ingredients</button>
 		</div>
 		
-		<div ng-show="success">Recipe Successfully Added</div>
-		<div ng-show="failure">{{errorMessage}}</div>
+		<div id="centered">
+			<button type="button" ng-click="createRecipe()">Create Recipe</button>
+		</div>
 		
+		<div ng-show="success" id="centered">Recipe Successfully Added</div>
+		<div ng-show="failure" id="centered">{{errorMessage}}</div>
+		
+		<div id="centered">
+			<button class="btn" type="button" ng-click=home() >Home</button>
+		</div>
 	</div>
 
 

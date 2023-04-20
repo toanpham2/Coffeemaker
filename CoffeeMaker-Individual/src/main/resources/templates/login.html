@@ -2,34 +2,7 @@
 
 <title>Login to Coffee Maker</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<style>
-	.line1{
-		position: relative;
-		padding: 10px;	
-		
-	}
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-		padding: 10px;
-	}
-	
-	.line{
-		padding-bottom: 20px;
-	}
-	
-	.btn{
-		width: 100px;
-	}
-	
-	#inputLabel {
-		font-size: 30px; 	
-	}
-	
-		
-</style>
+<link rel="stylesheet" href="css/login.css">
 
 </head>
 
@@ -48,8 +21,14 @@
 			}
 			
 			
+			$scope.placeAnonymousOrder = function(){
+				localStorage.setItem("isAnon", true)
+				window.location.href = "/customerhome.html"
+			}
+			
 			$scope.login = function() {
 				localStorage.setItem('username', $scope.enteredUsername);
+				localStorage.setItem('isAnon', false)
 				$http.get("api/v1/users/" + $scope.enteredUsername).then(function(response){
 					if(response.data.password == $scope.enteredPassword){
 						if(response.data.isStaff){
@@ -98,6 +77,10 @@
 		
 		<div id="centered">
 			<a href="createaccount.html"><button>Create Account</button></a>
+		</div>
+		
+		<div id="centered">
+			<button ng-click="placeAnonymousOrder()">Place Anonymous Order</button>
 		</div>
 		
 		
