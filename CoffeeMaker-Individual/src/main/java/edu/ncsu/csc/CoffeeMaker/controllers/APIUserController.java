@@ -83,7 +83,7 @@ public class APIUserController extends APIController {
     /**
      * DELETE for a new user (create a new user)
      *
-     * @param user
+     * @param username
      *            the user to delete
      * @return Response Entity
      */
@@ -108,7 +108,7 @@ public class APIUserController extends APIController {
      * PUT for updating the user's order number (for customers) Increments the
      * order number by 1
      *
-     * @param user
+     * @param username
      *            the user to update information for
      * @return Response Entity
      */

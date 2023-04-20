@@ -44,7 +44,7 @@ public class User extends DomainObject {
     private int                 orderNumber;
 
     /**
-     * empty constructor
+     * empty constructor for testing purposes
      */
     public User () {
 
@@ -61,6 +61,8 @@ public class User extends DomainObject {
      *            code to indicate if a user is staff or not
      * @param isStaff
      *            true if user is staff, false otherwise
+     * @param isAnon
+     *            true if user is placing an anonymous order
      */
     public User ( final String username, final String password, final String submittedStaffCode, final boolean isStaff,
             final boolean isAnon ) {
@@ -168,10 +170,10 @@ public class User extends DomainObject {
     }
 
     /**
-     * sets the is anon of user
+     * Sets the user to isAnonymous
      *
-     * @param boolean
-     *            status to set
+     * @param status
+     *            status to of anonymous user is set
      *
      */
     public void setIsAnon ( final boolean status ) {
