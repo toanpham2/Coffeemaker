@@ -1,0 +1,28 @@
+#centered{
+	display: flex;
+	justify-content: center;
+	position: relative;
+	padding: 10px;
+}
+
+.submitbutton{
+	margin-left: 10px;
+	margin-right: 10px;
+	font-size: 15px;
+	
+}
+
+.recipeunit {
+	display: inline-block;
+	text-align: left;
+	width: 150px;
+}
+
+
+#inputlabel{
+	font-size: 25px;
+}
+
+.inputbox{
+	width: 300px;
+}

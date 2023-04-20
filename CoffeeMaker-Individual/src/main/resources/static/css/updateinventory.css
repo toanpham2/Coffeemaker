@@ -1,0 +1,31 @@
+.line1{
+	position: relative;
+	padding: 10px;	
+}
+
+#centered{
+	display: flex;
+	justify-content: center;
+}
+
+#inputlabel {
+	text-align: left;
+	display: inline-block;
+	width:10%;
+}
+
+#units {
+	margin-bottom: 5px;
+}
+
+.submitbtn {
+	margin-bottom: 15px;
+}
+
+.line{
+	padding-bottom: 20px;
+}
+
+.submitbtn{
+	margin-top: 20px;
+}
