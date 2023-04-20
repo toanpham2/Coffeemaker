@@ -2,43 +2,7 @@
 
 <title>My CoffeeMaker Home</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-<style>
-	.line1{
-		position: relative;
-		padding: 10px;	
-		
-	}
-	
-	#centered{
-		display: flex;
-		justify-content: center;
-		padding: 10px;
-	}
-	
-	.line{
-		padding-bottom: 20px;
-	}
-	
-	.btn{
-		width: 200px;
-	}
-	
-	#inputLabel {
-		font-size: 30px; 	
-	}
-	
-	th, td {
-		padding: 17px 70px;
-		border: 1px solid;
-	}
-	
-	table {
-  		border-collapse: collapse;
-	}
-	
-		
-</style>
+<link rel="stylesheet" href="css/customerhome.css">
 
 </head>
 
@@ -198,7 +162,7 @@
 						$http.post("api/v1/orders", $scope.orderObject).then(function(response) {
 							console.log(response);
 							$scope.refresh()
-							$scope.response = "Order palced. Your change is $" + $scope.change
+							$scope.response = "Order placed. Your change is $" + $scope.change
 						}, function(rejection) {
 							console.log(rejection);
 						})

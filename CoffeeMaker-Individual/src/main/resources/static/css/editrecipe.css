@@ -1,0 +1,18 @@
+.line1{
+	position: relative;
+	padding: 10px;	
+}
+
+#centered{
+	display: flex;
+	justify-content: center;
+}
+
+.line{
+	padding-bottom: 20px;
+}
+
+.submitbtn{
+	margin-top: 20px;
+}
+	
